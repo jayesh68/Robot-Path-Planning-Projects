@@ -29,7 +29,7 @@ Steps to run the program
 1. In the terminal clone the repository https://github.com/jayesh68/ENPM661.git or extract the zip folder of the file.
 2. Navigate to the folder Project2.
 3. Run the command python3 P2_BFS.py and P2_DIJKSTRA.py
-4. There are a total of 2 test cases which are stored in a variable called s in the program. Each test case needs to be uncommented to run.
+4. There are a total of 2 test cases. Each test case needs to be uncommented to run.
 
 The two test cases for BFS are:
 1. Start node [1,1] and goal node [399,299].
