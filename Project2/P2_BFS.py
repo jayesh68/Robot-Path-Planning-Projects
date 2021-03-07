@@ -239,10 +239,16 @@ def obstaclecheck(curr_node):
                     
 getobstaclespace()
     
-s = [1,1]                   #Start Position Test Case 1
-g = [399,299]               #Goal Position Test Case 1
-s=[30,30]                   #Start Position Test Case 2
-s=[230,250]                 #Goal Position Test Case 2
+x1=int(input('Enter x coordinate of start node'))
+y1=int(input('Enter y coordinate of start node'))
+s = [x1,y1]
+x2=int(input('Enter x coordinate of goal node'))
+y2=int(input('Enter y coordinate of goal node'))
+g = [x2,y2]               
+#s=[1,1]                     #Start Position Test Case 1
+#g=[399,299]                 #Goal Position Test Case 1
+#s=[30,30]                  #Start Position Test Case 2
+#g=[230,250]                #Goal Position Test Case 2
 xmax=400                    #Width of the image
 ymax=300                    #Height of the image
 start_time = time.time()    #Program start time
