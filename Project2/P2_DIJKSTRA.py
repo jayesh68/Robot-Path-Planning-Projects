@@ -238,11 +238,16 @@ def obstaclecheck(curr_node):
         return False
                     
 getobstaclespace()
-# The different input states of test cases 1-5 stored as a 1d list
-#s = [1,1]                   #Start Position Test Case1
-#g = [399,299]               #Goal Position Test Case1
-s=[50,50]                   #Start Position Test Case2
-g=[200,200]                 #Goal Position Test Case2   
+x1=int(input('Enter x coordinate of start node'))
+y1=int(input('Enter y coordinate of start node'))
+s = [x1,y1]
+x2=int(input('Enter x coordinate of goal node'))
+y2=int(input('Enter y coordinate of goal node'))
+g = [x2,y2]               
+#s=[1,1]                     #Start Position Test Case 1
+#g=[399,299]                 #Goal Position Test Case 1
+#s=[30,30]                  #Start Position Test Case 2
+#g=[230,250]                #Goal Position Test Case 2  
 xmax=400                    #Width of the map
 ymax=300                    #Height of the map
 start_time = time.time()    #Program start time
