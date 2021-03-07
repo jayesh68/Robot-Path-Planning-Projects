@@ -3,7 +3,7 @@ ENPM661 Project2: To reach the goal node from a start point using BFS or DIJKSTR
 There are 2 files P2_BFS.py where the start to goal node is reached through the BFS algorithm and P2_DIJKSTRA.py which runs the same using DIJKSTRA algorithm. The time taken to reach the goal state using BFS is 5-6 mins and using Dijkstra the goal state is reached in 10-18 secs which includes backtracking using the parent node information.
 
 The logic for the BFS is as follows. 
-1. The start node and goal node is given by the x,y position.
+1. The start node and goal node is given by the x,y position which takes input from the user
 2. A function is called to create a list of the obstacle coordinates and initialize an image which would later be used to setup the animation.
 3. There are checks to verify start node is the same as the goal node, if the start ot the goal node is in the obstacle space or outside the map.
 4. There are 2 lists one is the visited list (using a set instead of list as the computation is faster) and open list (parent_node in my case).
@@ -14,7 +14,7 @@ The logic for the BFS is as follows.
 
 
 The logic for the Dijkstra is as follows. 
-1. The start node and goal node is given by the x,y position.
+1. The start node and goal node is given by the x,y position which takes input from the user.
 2. A function is called to create a list of the obstacle coordinates and initialize an image which would later be used to setup the animation.
 3. There are checks to verify start node is the same as the goal node, if the start ot the goal node is in the obstacle space or outside the map.
 4. A priority queue is initialized with the cost and the start node. The cost to reach the rest of the points are set to infinity
