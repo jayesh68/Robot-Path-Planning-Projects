@@ -15,7 +15,6 @@ import pygame
 import os
 from queue import PriorityQueue
 
-#Creating an image to use for animation
 oblist=set([])   #Set to store the obstacle coordinates
 oblist1=[]       #List to store the obstacle coordinates for final animation
 
@@ -203,20 +202,37 @@ def getobstaclespace():
                 if (x<=210 and y>=270 and y<=280):
                     oblist.add(str([x,y]))
                     oblist1.append([x,y])
-                                        
-getobstaclespace()
-x1=int(input('Enter x coordinate of start node'))
-y1=int(input('Enter y coordinate of start node'))
-s = [x1,y1]
-x2=int(input('Enter x coordinate of goal node'))
-y2=int(input('Enter y coordinate of goal node'))
-g = [x2,y2]               
-#s=[1,1]                     #Start Position Test Case 1
-#g=[399,299]                 #Goal Position Test Case 1
-#s=[50,50]                  #Start Position Test Case 2
-#g=[200,200]                #Goal Position Test Case 2  
+    
+
+#s = [1,1]                   #Start Position Test Case1
+#g = [399,299]               #Goal Position Test Case1
 xmax=400                    #Width of the map
 ymax=300                    #Height of the map
+getobstaclespace()
+while(1):
+    x1=int(input('Enter x coordinate of start node'))
+    y1=int(input('Enter y coordinate of start node'))
+
+    s = [x1,y1]
+    x2=int(input('Enter x coordinate of goal node'))
+    y2=int(input('Enter y coordinate of goal node'))
+    g = [x2,y2]                 #Goal Position Test Case2  
+    
+    if s == g:  #Checking if goal node is the same as the start node
+        print('goal node equal to start node. Re enter your points again')
+        continue
+    
+    elif str(s) in oblist or str(g) in oblist: #checking if the goal or start node is in the obstacspace
+        print('Starting or goal node in obstacle space. Re enter the points again')
+        solvable=False
+        continue
+    
+    elif (s[0] <0 or s[0]> xmax) or (s[1]<0 or s[1] > ymax) or (g[0] <0 or g[0]> xmax) or (g[1]<0 or g[1] > ymax): #Checking if the start and goal node is within the grid(400x300)
+        print('start/goal < 0 or greater than grid size. Re enter the points again')
+        
+    else:
+        break
+
 start_time = time.time()    #Program start time
 visited_nodes = set([])     #Set consisting of all the nodes traversed by the point robot
 visited=[]                  #Containing the list of visited nodes. Would be used for animating the visited states in the map
@@ -224,7 +240,6 @@ child_node = []             #stores the child states after point robot moves to 
 path_track={}               #Dictionary storing the parent nodes of the different child nodes to backtrack the path followed
 print(s)                    
 print(g)
-flag = 'n'                  #Flag to verify if the goal state is reached
 solvable=True
 l=0
 q = PriorityQueue()         #Setting a priority queue
@@ -241,15 +256,7 @@ for i in range(0, xmax):
 distance[str(s)] = 0 
 visited_nodes.add(str(s)) #Adding the start node to the set of visited nodes
 visited.append(s)         #Appending the visited list
-
-
-if str(s) in oblist or str(g) in oblist: #checking if the goal or start node is in the obstacspace
-    print('Starting or goal node in obstacle space')
-    solvable=False
-
-if (s[0] <0 or s[0]> xmax) or (s[1]<0 or s[1] > ymax) or (g[0] <0 or g[0]> xmax) or (g[1]<0 or g[1] > ymax): #Checking if the start and goal node is within the grid(400x300)
-    print('start/goal < 0 or greater than grid size')
-
+        
 if solvable:
     #print('solvable')
     while not q.empty():  #Process when queue is not empty
@@ -259,15 +266,9 @@ if solvable:
         
         #Checking if goal is reached or not
         if a[1]==g:
-                print('goal reached')
-                flag='f'
-                break
-         
-        if flag=='f':
             print('goal reached')
             break
         l+=1
-        
         #Getting the child nodes after moving in different positions
         l_child,cost1 = ActionMoveLeft(a[1],a[0])
         u_child,cost2 = ActionMoveUp(a[1],a[0])
@@ -446,6 +447,7 @@ white = (0,255,255)     #Color respresenting the visited nodes
 yellow=(255,255,0)      #Color representing the obstacles
 
 i=0
+#surf = pygame.surfarray.make_surface(img)
 
 clock = pygame.time.Clock()
 done = False
@@ -493,7 +495,9 @@ pygame.quit()
 size=(400,300)
 out = cv2.VideoWriter('p2dijkstra.avi',cv2.VideoWriter_fourcc(*'DIVX'), 800, size)
 file_list=os.listdir('/home/jayesh/Documents/ENPM661_PROJECT1/map1')
+
 new_list=[]
+
 for file in file_list:
     #print(file)
     a=file.split('.')[0]
@@ -501,6 +505,7 @@ for file in file_list:
     new_list.append(a)
       
 #print(new_list)
+
 for i in range(0,len(new_list)):
     filename=f'/home/jayesh/Documents/ENPM661_PROJECT1/map1/{i}.png'
     #print(filename)
@@ -509,7 +514,9 @@ for i in range(0,len(new_list)):
     img = cv2.imread(filename)
     out.write(img)
 #cv2.imshow('obstacle',img)
+
 out.release()
+
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 '''
