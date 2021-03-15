@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 """
 Created on Sat Mar  6 12:33:02 2021
-
 @author: jayesh
 """
 
@@ -17,8 +16,8 @@ import os
 from queue import PriorityQueue
 
 #Creating an image to use for animation
-img = np.zeros((301, 401), np.uint8)
-oblist=[]   #List to store the obstacle coordinates
+oblist=set([])   #Set to store the obstacle coordinates
+oblist1=[]       #List to store the obstacle coordinates for final animation
 
 #Function to traverse in the downward direction
 def ActionMoveDown(curr_node,cost):
@@ -168,75 +167,43 @@ def getobstaclespace():
     for x in range(0,401):
         for y in range(0,301):
             if y-0.7*x>=74.28 and y-0.7*x <= 98.76 and y+1.42*x>=176.42 and y+1.384*x<=430.619:
-                img[y][x]=255
-                oblist.append([x,y])
+                oblist.add(str([x,y]))
+                oblist1.append([x,y])
             #Circle Object
             if ((x-90)**2 + (y-70)**2)<(35**2):
-                img[y][x]=255
-                oblist.append([x,y])
+                oblist.add(str([x,y]))
+                oblist1.append([x,y])
             #Ellipse Object
             if(((x-246)**2)/60**2 +((y-145)**2)/30**2 <= 1):
-                img[y][x]=255
-                oblist.append([x,y])
-
+                oblist.add(str([x,y]))
+                oblist1.append([x,y])
+                
             if y-x>=-265 and y+x>=391 and y-x<=-180.22 and y+0.98*x<=464.237:
-                img[y][x]=255
-                oblist.append([x,y])
-
+                oblist.add(str([x,y]))
+                oblist1.append([x,y])
+                
             if x<=381.4 and y-171.4<=0 and y-1.21*x<=-293.51 and y-x>=-265 and x>=328:# and y+0.25*x<=224.95
-                img[y][x]=255
-                oblist.append([x,y])
-            
+                oblist.add(str([x,y]))
+                oblist1.append([x,y])
+                
             #Polygon Shaped Object
             if (x>=200 and x<=230) and (y>=230 and y<=280):    
                 if (x>=200 and x<=210 and y>=240 and y<=270):
-                    img[y][x]=255
-                    oblist.append([x,y])
+                    oblist.add(str([x,y]))
+                    oblist1.append([x,y])
                 if (y>=270 and y<=280 and x>=210 and x<=230):
-                    img[y][x]=255
-                    oblist.append([x,y])
+                    oblist.add(str([x,y]))
+                    oblist1.append([x,y])
                 if (y>=230 and y<=240 and x>=210 and x<=240):
-                    img[y][x]=255
-                    oblist.append([x,y])
+                    oblist.add(str([x,y]))
+                    oblist1.append([x,y])
                 if (x<=210 and y<=240):
-                    img[y][x]=255
-                    oblist.append([x,y])
+                    oblist.add(str([x,y]))
+                    oblist1.append([x,y])
                 if (x<=210 and y>=270 and y<=280):
-                    img[y][x]=255
-                    oblist.append([x,y])
-                    
-#Function to check if node is in obstacle space or not
-def obstaclecheck(curr_node):
-    curr_node1 = copy.deepcopy(curr_node)
-    x = curr_node1[0]
-    y = curr_node1[1]
-    
-    if y-0.7*x>=74.28 and y-0.7*x <= 98.76 and y+1.42*x>=176.42 and y+1.384*x<=430.619:
-        return True    
-            #Circle Object
-    elif ((x-90)**2 + (y-70)**2)<(35**2):
-        return True
-            #Ellipse Object
-    elif(((x-246)**2)/60**2 +((y-145)**2)/30**2 <= 1):
-        return True
-    elif y-x>=-265 and y+x>=391 and y-x<=-180.22 and y+0.98*x<=464.237:
-        return True
-    elif x<=381.4 and y-171.4<=0 and y-1.21*x<=-293.51 and y-x>=-265 and x>=328:# and y+0.25*x<=224.95
-        return True
-    elif (x>=200 and x<=230) and (y>=230 and y<=280):    
-        if (x>=200 and x<=210 and y>=240 and y<=270):
-            return True    
-        elif (y>=270 and y<=280 and x>=210 and x<=230):
-            return True
-        elif (y>=230 and y<=240 and x>=210 and x<=240):
-            return True
-        elif (x<=210 and y<=240):
-            return True
-        elif (x<=210 and y>=270 and y<=280):
-            return True
-    else:
-        return False
-                    
+                    oblist.add(str([x,y]))
+                    oblist1.append([x,y])
+                                        
 getobstaclespace()
 x1=int(input('Enter x coordinate of start node'))
 y1=int(input('Enter y coordinate of start node'))
@@ -276,10 +243,7 @@ visited_nodes.add(str(s)) #Adding the start node to the set of visited nodes
 visited.append(s)         #Appending the visited list
 
 
-if s == g:  #Checking if goal node is the same as the start node
-    print('goal already reached')
-
-if s in oblist or g in oblist: #checking if the goal or start node is in the obstacspace
+if str(s) in oblist or str(g) in oblist: #checking if the goal or start node is in the obstacspace
     print('Starting or goal node in obstacle space')
     solvable=False
 
@@ -318,119 +282,110 @@ if solvable:
         path_track[str(a[1])] = []        
                     
         #Checking if the child nodes are visited or not, if they lie within the resolution specified and if present in the obstacle space
-        if (obstaclecheck(l_child) != True) and (str(l_child) not in visited_nodes) and (l_child[0]>0 and l_child[0]<xmax) and (l_child[1]>0 and l_child[1]<ymax):
-            #print('l',l_child)
-            visited_nodes.add(str(l_child))         #Adding the child nodes to the set of visited nodes
-            visited.append(l_child)
-            new_cost=cost1+distance[str(a[1])]      #Calculating the new cost
-            distance[str(l_child)]=new_cost         #Setting the new cost of the node
-            q.put([new_cost, l_child])              #Updating the priority queue
-            path_track[str(a[1])].append(l_child)   #Updating the parent information
-            
-        if (obstaclecheck(l_child) != True) and (str(l_child) in visited_nodes) and (l_child[0]>0 and l_child[0]<xmax) and (l_child[1]>0 and l_child[1]<ymax):
-            new_cost=cost1+distance[str(a[1])]
-            if new_cost < distance[str(l_child)]:   #If node already visited updating the node with the new cost if new cost is less than the original value
-                distance[str(l_child)] = new_cost   
+        if (str(l_child) not in oblist) and (l_child[0]>0 and l_child[0]<xmax) and (l_child[1]>0 and l_child[1]<ymax):
+            if (str(l_child) not in visited_nodes):
+                visited_nodes.add(str(l_child))         #Adding the child nodes to the set of visited nodes
+                visited.append(l_child)
+                new_cost=cost1+distance[str(a[1])]      #Calculating the new cost
+                distance[str(l_child)]=new_cost         #Setting the new cost of the node
+                q.put([new_cost, l_child])              #Updating the priority queue
+                path_track[str(a[1])].append(l_child)   #Updating the parent information
+            else:
+                new_cost=cost1+distance[str(a[1])]
+                if new_cost < distance[str(l_child)]:   #If node already visited updating the node with the new cost if new cost is less than the original value
+                    distance[str(l_child)] = new_cost
         
         #Similarly perform for the remaining nodes in different directions
-        if (obstaclecheck(r_child)!=True) and (str(r_child) not in visited_nodes) and (r_child[0]>0 and r_child[0]<xmax) and (r_child[1]>0 and r_child[1]<ymax):
-            #print('l',l_child)
-            visited_nodes.add(str(r_child))
-            visited.append(r_child)
-            new_cost=cost2+distance[str(a[1])]
-            distance[str(r_child)]=new_cost
-            q.put([new_cost, r_child])
-            #print('rchild',r_child)
-            path_track[str(a[1])].append(r_child)
-            
-        if (obstaclecheck(r_child)!=True) and (str(r_child) in visited_nodes) and (r_child[0]>0 and r_child[0]<xmax) and (r_child[1]>0 and r_child[1]<ymax):
-            new_cost=cost2+distance[str(a[1])]
-            if new_cost < distance[str(r_child)]:
-                distance[str(r_child)] = new_cost
+        if (str(r_child) not in oblist) and (r_child[0]>0 and r_child[0]<xmax) and (r_child[1]>0 and r_child[1]<ymax):
+            if (str(r_child) not in visited_nodes):
+                visited_nodes.add(str(r_child))         #Adding the child nodes to the set of visited nodes
+                visited.append(r_child)
+                new_cost=cost1+distance[str(a[1])]      #Calculating the new cost
+                distance[str(r_child)]=new_cost         #Setting the new cost of the node
+                q.put([new_cost, r_child])              #Updating the priority queue
+                path_track[str(a[1])].append(r_child)   #Updating the parent information
+            else:
+                new_cost=cost1+distance[str(a[1])]
+                if new_cost < distance[str(r_child)]:   #If node already visited updating the node with the new cost if new cost is less than the original value
+                    distance[str(r_child)] = new_cost
                 
-        if (obstaclecheck(u_child)!=True) and (str(u_child) not in visited_nodes) and (u_child[0]>0 and u_child[0]<xmax) and (u_child[1]>0 and u_child[1]<ymax):
-            #print('l',l_child)
-            visited_nodes.add(str(u_child))
-            visited.append(u_child)
-            new_cost=cost3+distance[str(a[1])]
-            distance[str(u_child)]=new_cost
-            q.put([new_cost, u_child])
-            path_track[str(a[1])].append(u_child)
-            
-        if (obstaclecheck(u_child)!=True) and (str(u_child) in visited_nodes) and (u_child[0]>0 and u_child[0]<xmax) and (u_child[1]>0 and u_child[1]<ymax):
-            new_cost=cost3+distance[str(a[1])]
-            if new_cost < distance[str(u_child)]:
-                distance[str(u_child)] = new_cost
+        if (str(u_child) not in oblist) and (u_child[0]>0 and u_child[0]<xmax) and (u_child[1]>0 and u_child[1]<ymax):
+            if (str(u_child) not in visited_nodes):
+                visited_nodes.add(str(u_child))         #Adding the child nodes to the set of visited nodes
+                visited.append(u_child)
+                new_cost=cost1+distance[str(a[1])]      #Calculating the new cost
+                distance[str(u_child)]=new_cost         #Setting the new cost of the node
+                q.put([new_cost, u_child])              #Updating the priority queue
+                path_track[str(a[1])].append(u_child)   #Updating the parent information
+            else:
+                new_cost=cost1+distance[str(a[1])]
+                if new_cost < distance[str(u_child)]:   #If node already visited updating the node with the new cost if new cost is less than the original value
+                    distance[str(u_child)] = new_cost
                 
-        if (obstaclecheck(d_child)!=True) and (str(d_child) not in visited_nodes) and (d_child[0]>0 and d_child[0]<xmax) and (d_child[1]>0 and d_child[1]<ymax):
-            #print('l',l_child)
-            visited_nodes.add(str(d_child))
-            visited.append(d_child)
-            new_cost=cost4+distance[str(a[1])]
-            distance[str(d_child)]=new_cost
-            q.put([new_cost, d_child])
-            path_track[str(a[1])].append(d_child)
-            
-        if (obstaclecheck(d_child)!=True) and (str(d_child) in visited_nodes) and (d_child[0]>0 and d_child[0]<xmax) and (d_child[1]>0 and d_child[1]<ymax):
-            new_cost=cost4+distance[str(a[1])]
-            if new_cost < distance[str(d_child)]:
-                distance[str(d_child)] = new_cost
+        if (str(d_child) not in oblist) and (d_child[0]>0 and d_child[0]<xmax) and (d_child[1]>0 and d_child[1]<ymax):
+            if (str(d_child) not in visited_nodes):
+                visited_nodes.add(str(d_child))         #Adding the child nodes to the set of visited nodes
+                visited.append(d_child)
+                new_cost=cost1+distance[str(a[1])]      #Calculating the new cost
+                distance[str(d_child)]=new_cost         #Setting the new cost of the node
+                q.put([new_cost, d_child])              #Updating the priority queue
+                path_track[str(a[1])].append(d_child)   #Updating the parent information
+            else:
+                new_cost=cost1+distance[str(a[1])]
+                if new_cost < distance[str(d_child)]:   #If node already visited updating the node with the new cost if new cost is less than the original value
+                    distance[str(d_child)] = new_cost
                 
-        if (obstaclecheck(ul_child)!=True) and (str(ul_child) not in visited_nodes) and (ul_child[0]>0 and ul_child[0]<xmax) and (ul_child[1]>0 and ul_child[1]<ymax):
-            #print('l',l_child)
-            visited_nodes.add(str(ul_child))
-            visited.append(ul_child)
-            new_cost=cost5+distance[str(a[1])]
-            distance[str(ul_child)]=new_cost
-            q.put([new_cost, ul_child])
-            path_track[str(a[1])].append(ul_child)
-            
-        if (obstaclecheck(ul_child)!=True) and (str(ul_child) in visited_nodes) and (ul_child[0]>0 and ul_child[0]<xmax) and (ul_child[1]>0 and ul_child[1]<ymax):
-            new_cost=cost5+distance[str(a[1])]
-            if new_cost < distance[str(ul_child)]:
-                distance[str(ul_child)] = new_cost
+        if (str(ul_child) not in oblist) and (ul_child[0]>0 and ul_child[0]<xmax) and (ul_child[1]>0 and ul_child[1]<ymax):
+            if (str(ul_child) not in visited_nodes):
+                visited_nodes.add(str(ul_child))         #Adding the child nodes to the set of visited nodes
+                visited.append(ul_child)
+                new_cost=cost1+distance[str(a[1])]      #Calculating the new cost
+                distance[str(ul_child)]=new_cost         #Setting the new cost of the node
+                q.put([new_cost, ul_child])              #Updating the priority queue
+                path_track[str(a[1])].append(ul_child)   #Updating the parent information
+            else:
+                new_cost=cost1+distance[str(a[1])]
+                if new_cost < distance[str(ul_child)]:   #If node already visited updating the node with the new cost if new cost is less than the original value
+                    distance[str(ul_child)] = new_cost
                 
-        if (obstaclecheck(dl_child)!=True) and (str(dl_child) not in visited_nodes) and (dl_child[0]>0 and dl_child[0]<xmax) and (dl_child[1]>0 and dl_child[1]<ymax):
-            #print('l',l_child)
-            visited_nodes.add(str(dl_child))
-            visited.append(dl_child)
-            new_cost=cost7+distance[str(a[1])]
-            distance[str(dl_child)]=new_cost
-            q.put([new_cost, dl_child])
-            path_track[str(a[1])].append(dl_child)
-            
-        if (obstaclecheck(dl_child)!=True) and (str(dl_child) in visited_nodes) and (dl_child[0]>0 and dl_child[0]<xmax) and (dl_child[1]>0 and dl_child[1]<ymax):
-            new_cost=cost7+distance[str(a[1])]
-            if new_cost < distance[str(dl_child)]:
-                distance[str(dl_child)] = new_cost
+        if (str(dl_child) not in oblist) and (dl_child[0]>0 and dl_child[0]<xmax) and (dl_child[1]>0 and dl_child[1]<ymax):
+            if (str(dl_child) not in visited_nodes):
+                visited_nodes.add(str(dl_child))         #Adding the child nodes to the set of visited nodes
+                visited.append(dl_child)
+                new_cost=cost1+distance[str(a[1])]      #Calculating the new cost
+                distance[str(dl_child)]=new_cost         #Setting the new cost of the node
+                q.put([new_cost, dl_child])              #Updating the priority queue
+                path_track[str(a[1])].append(dl_child)   #Updating the parent information
+            else:
+                new_cost=cost1+distance[str(a[1])]
+                if new_cost < distance[str(dl_child)]:   #If node already visited updating the node with the new cost if new cost is less than the original value
+                    distance[str(dl_child)] = new_cost
                 
-        if (obstaclecheck(ur_child)!=True) and (str(ur_child) not in visited_nodes) and (ur_child[0]>0 and ur_child[0]<xmax) and (ur_child[1]>0 and ur_child[1]<ymax):
-            #print('l',l_child)
-            visited_nodes.add(str(ur_child))
-            visited.append(ur_child)
-            new_cost=cost6+distance[str(a[1])]
-            distance[str(ur_child)]=new_cost
-            q.put([new_cost, ur_child])
-            path_track[str(a[1])].append(ur_child)
-            
-        if (obstaclecheck(ur_child)!=True) and (str(ur_child) in visited_nodes) and (ur_child[0]>0 and ur_child[0]<xmax) and (ur_child[1]>0 and ur_child[1]<ymax):
-            new_cost=cost6+distance[str(a[1])]
-            if new_cost < distance[str(ur_child)]:
-                distance[str(ur_child)] = new_cost
+        if (str(ur_child) not in oblist) and (ur_child[0]>0 and ur_child[0]<xmax) and (ur_child[1]>0 and ur_child[1]<ymax):
+            if (str(ur_child) not in visited_nodes):
+                visited_nodes.add(str(ur_child))         #Adding the child nodes to the set of visited nodes
+                visited.append(ur_child)
+                new_cost=cost1+distance[str(a[1])]      #Calculating the new cost
+                distance[str(ur_child)]=new_cost         #Setting the new cost of the node
+                q.put([new_cost, ur_child])              #Updating the priority queue
+                path_track[str(a[1])].append(ur_child)   #Updating the parent information
+            else:
+                new_cost=cost1+distance[str(a[1])]
+                if new_cost < distance[str(ur_child)]:   #If node already visited updating the node with the new cost if new cost is less than the original value
+                    distance[str(ur_child)] = new_cost
                 
-        if (obstaclecheck(dr_child)!=True) and (str(dr_child) not in visited_nodes) and (dr_child[0]>0 and dr_child[0]<xmax) and (dr_child[1]>0 and dr_child[1]<ymax):
-            #print('l',l_child)
-            visited_nodes.add(str(dr_child))
-            visited.append(dr_child)
-            new_cost=cost8+distance[str(a[1])]
-            distance[str(dr_child)]=new_cost
-            q.put([new_cost, dr_child])
-            path_track[str(a[1])].append(dr_child)
-            
-        if (obstaclecheck(dr_child)!=True) and (str(dr_child) in visited_nodes) and (dr_child[0]>0 and dr_child[0]<xmax) and (dr_child[1]>0 and dr_child[1]<ymax):
-            new_cost=cost8+distance[str(a[1])]
-            if new_cost < distance[str(dr_child)]:
-                distance[str(dr_child)] = new_cost
+        if (str(dr_child) not in oblist) and (dr_child[0]>0 and dr_child[0]<xmax) and (dr_child[1]>0 and dr_child[1]<ymax):
+            if (str(dr_child) not in visited_nodes):
+                visited_nodes.add(str(dr_child))         #Adding the child nodes to the set of visited nodes
+                visited.append(dr_child)
+                new_cost=cost1+distance[str(a[1])]      #Calculating the new cost
+                distance[str(dr_child)]=new_cost         #Setting the new cost of the node
+                q.put([new_cost, dr_child])              #Updating the priority queue
+                path_track[str(a[1])].append(dr_child)   #Updating the parent information
+            else:
+                new_cost=cost1+distance[str(a[1])]
+                if new_cost < distance[str(dr_child)]:   #If node already visited updating the node with the new cost if new cost is less than the original value
+                    distance[str(dr_child)] = new_cost
 
    
 #Time to reach goal state
@@ -477,9 +432,6 @@ F.close()
 print("total time:")
 print(time.time()-start_time)  
 
-#flipping the image axis to use for the animation
-img=cv2.flip(img, 0)
-
 #Creating an animation using pygame
 pygame.init()
 
@@ -494,7 +446,6 @@ white = (0,255,255)     #Color respresenting the visited nodes
 yellow=(255,255,0)      #Color representing the obstacles
 
 i=0
-surf = pygame.surfarray.make_surface(img)
 
 clock = pygame.time.Clock()
 done = False
@@ -506,7 +457,7 @@ while not done:
     gameDisplay.fill(black)
 
     #Setting the obstacle space in the animation
-    for path in oblist:
+    for path in oblist1:
             x = int(path[0])
             y = abs(300-int(path[1]))
             pygame.draw.rect(gameDisplay, yellow, [x,y,1,1])
@@ -542,9 +493,7 @@ pygame.quit()
 size=(400,300)
 out = cv2.VideoWriter('p2dijkstra.avi',cv2.VideoWriter_fourcc(*'DIVX'), 800, size)
 file_list=os.listdir('/home/jayesh/Documents/ENPM661_PROJECT1/map1')
-
 new_list=[]
-
 for file in file_list:
     #print(file)
     a=file.split('.')[0]
@@ -552,7 +501,6 @@ for file in file_list:
     new_list.append(a)
       
 #print(new_list)
-
 for i in range(0,len(new_list)):
     filename=f'/home/jayesh/Documents/ENPM661_PROJECT1/map1/{i}.png'
     #print(filename)
@@ -561,9 +509,7 @@ for i in range(0,len(new_list)):
     img = cv2.imread(filename)
     out.write(img)
 #cv2.imshow('obstacle',img)
-
 out.release()
-
 cv2.waitKey(0)
 cv2.destroyAllWindows()
 '''
