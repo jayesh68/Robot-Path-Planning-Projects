@@ -38,3 +38,6 @@ The two test cases for BFS are:
 The two test cases for Dijkstra are:
 1. Start node [1,1] and goal node [399,299].
 2. Start node [50,50] and goal node [200,200].
+
+
+Have added updated script for BFS P2_BFS_UPDATED.py where redundant code has been removed and the if user inputs invalid values the program restarts and the user needs to reenter those values again.
