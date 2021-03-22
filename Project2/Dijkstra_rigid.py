@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Fri Mar 19 14:06:18 2021
+Created on Mon Mar 22 06:44:49 2021
 
 @author: jayesh
 """
-
 
 import numpy as np
 import copy
@@ -31,145 +30,87 @@ ymax=300                    #Height of the map
 
 #Function to traverse in the downward direction
 def ActionMoveDown(curr_node,cost):
-    #print('down')
-    curr_node1 = copy.deepcopy(curr_node)
-    #print('d',curr_node1)
-    x = curr_node1[0]
-    y = curr_node1[1]
-    curr_node = (x,y)
-    new_node=()
-    new_node_x = int(curr_node1[0])
-    new_node_y = int(curr_node1[1])
+    new_node=[]
+    new_node_x = int(curr_node[0])
+    new_node_y = int(curr_node[1])
     new_node_y-=1
     new_node = [new_node_x,new_node_y]
     if new_node[0]>=0 and new_node[1]>=0:
         return new_node,1
-    else:
-        return curr_node1,cost
 
 #Function to traverse in the upward direction
 def ActionMoveUp(curr_node,cost):
-    #print('up')
-    curr_node1 = copy.deepcopy(curr_node)
-    x = curr_node1[0]
-    y = curr_node1[1]
-    curr_node = (x,y)
-    new_node=()
-    new_node_x = int(curr_node1[0])
-    new_node_y = int(curr_node1[1])
+    new_node=[]
+    new_node_x = int(curr_node[0])
+    new_node_y = int(curr_node[1])
     new_node_y+=1
     new_node = [new_node_x,new_node_y]
     if new_node[0]>=0 and new_node[1]>=0:
         return new_node,1
-    else:
-        return curr_node1,cost
 
 #Function to traverse to the left
 def ActionMoveLeft(curr_node,cost):
-    #print('currleft',curr_node)
-    curr_node1 = copy.deepcopy(curr_node)
-    x = curr_node1[0]
-    y = curr_node1[1]
-    curr_node = (x,y)
-    new_node=()
-    #print('lcurr',curr_node1[0],curr_node1[1],len(curr_node1))
-    new_node_x = int(curr_node1[0])
+    new_node=[]
+    new_node_x = int(curr_node[0])
     new_node_x-=1
-    new_node_y = int(curr_node1[1])
+    new_node_y = int(curr_node[1])
     new_node = [new_node_x,new_node_y]
     if new_node[0]>=0 and new_node[1]>=0:
         return new_node,1
-    else:
-        return curr_node1,cost
 
 #Function to traverse to the right
 def ActionMoveRight(curr_node,cost):
-    #print('right')
-    curr_node1 = copy.deepcopy(curr_node)
-    x = curr_node1[0]
-    y = curr_node1[1]
-    curr_node = (x,y)
-    new_node=()
-    new_node_x = int(curr_node1[0])
+    new_node=[]
+    new_node_x = int(curr_node[0])
     new_node_x+=1
-    new_node_y = int(curr_node1[1])
+    new_node_y = int(curr_node[1])
     new_node = [new_node_x,new_node_y]
     if new_node[0]>=0 and new_node[1]>=0:
         return new_node,1
-    else:
-        return curr_node1,cost
-
+    
 #Function to traverse in the upward left direction
 def ActionMoveUL(curr_node,cost):
-    #print('ul')
-    curr_node1 = copy.deepcopy(curr_node)
-    x = curr_node1[0]
-    y = curr_node1[1]
-    curr_node = (x,y)
-    new_node=()
-    new_node_x = int(curr_node1[0])
+    new_node=[]
+    new_node_x = int(curr_node[0])
     new_node_x -=1
-    new_node_y = int(curr_node1[1])
+    new_node_y = int(curr_node[1])
     new_node_y+=1
     new_node = [new_node_x,new_node_y]
     if new_node[0]>=0 and new_node[1]>=0:
         return new_node,math.sqrt(2)
-    else:
-        return curr_node1,cost
-
+    
 #Function to traverse in the upward right direction
 def ActionMoveUR(curr_node,cost):
-    #print('ur')
-    curr_node1 = copy.deepcopy(curr_node)
-    x = str(curr_node1[0])
-    y = str(curr_node1[1])
-    curr_node1 = (x,y)
-    new_node=()
-    new_node_x = int(curr_node1[0])
+    new_node=[]
+    new_node_x = int(curr_node[0])
     new_node_x+= 1
-    new_node_y = int(curr_node1[1])
+    new_node_y = int(curr_node[1])
     new_node_y+= 1
     new_node = [new_node_x,new_node_y]
     if new_node[0]>=0 and new_node[1]>=0:
         return new_node,math.sqrt(2)
-    else:
-        return curr_node1,cost
 
 #Function to traverse in the downward left direction
 def ActionMoveDL(curr_node,cost):
-    #print('dl')
-    curr_node1 = copy.deepcopy(curr_node)
-    x = curr_node1[0]
-    y = curr_node1[1]
-    curr_node = (x,y)
-    new_node=()
-    new_node_x = int(curr_node1[0])
+    new_node=[]
+    new_node_x = int(curr_node[0])
     new_node_x-=1
-    new_node_y = int(curr_node1[1])
+    new_node_y = int(curr_node[1])
     new_node_y-=1
     new_node = [new_node_x,new_node_y]
     if new_node[0]>=0 and new_node[1]>=0:
         return new_node,math.sqrt(2)
-    else:
-        return curr_node1,cost
 
 #Function to traverse in the downward right direction
 def ActionMoveDR(curr_node,cost):
-    #print('dr')
-    curr_node1 = copy.deepcopy(curr_node)
-    x = str(curr_node1[0])
-    y = str(curr_node1[1])
-    curr_node = (x,y)
-    new_node=()
-    new_node_x = int(curr_node1[0])
+    new_node=[]
+    new_node_x = int(curr_node[0])
     new_node_x+=1
-    new_node_y = int(curr_node1[1])
+    new_node_y = int(curr_node[1])
     new_node_y-=1
     new_node = [new_node_x,new_node_y]
     if new_node[0]>=0 and new_node[1]>=0:
         return new_node,math.sqrt(2)
-    else:
-        return curr_node1,1
 
 #Function run initially to set the obstacle coordinates in the image and append to a list
 def getobstaclespace():
@@ -181,14 +122,7 @@ def getobstaclespace():
             if y-0.7*x>=74.28 and y-0.7*x <= 98.76 and y+1.425*x>=176.42 and y+1.428*x<=438.045:
                 img[y][x]=255
                 oblist.add(str([x,y]))
-                oblist1.append([x,y])
-            '''
-            if y-0.7*x>=(74.28-dist) and y-0.7*x <= (98.76+dist) and y+1.425*x>=(176.42-dist) and y+1.428*x<=(438.045+dist):
-                riglist.add(str([x,y]))
-            
-            if y-0.7*x>=(59.28) and y-0.7*x <= (113.76) and y+1.425*x>=(161.42) and y+1.428*x<=(453.04):
-                riglist.add(str([x,y]))
-            '''    
+                oblist1.append([x,y])   
 
             if y>=(x-44.316)*math.tan(35*math.pi/180)+87.109 and y <= (x-15.6376)*math.tan(35*math.pi/180)+128.066 and y>=-math.tan(55*math.pi/180)*(x-15.637)+128.066 and y<=-math.tan(55*math.pi/180)*(x-163.084)+231.31:
                 riglist.add(str([x,y]))
@@ -246,6 +180,7 @@ def getobstaclespace():
                 if (x<=210+dist and y>=270-dist and y<=280+dist):
                     riglist.add(str([x,y]))
             
+            #Resolution Check
             if x>=0 and x<=dist:
                 riglist.add(str([x,y]))
                 
@@ -259,17 +194,7 @@ def getobstaclespace():
                 riglist.add(str([x,y]))
             
 
-def find_new_cost():
-    new_cost=cost1+distance[str(a[1])]
-    if new_cost < distance[str(l_child)]:   #If node already visited updating the node with the new cost if new cost is less than the original value
-        distance[str(l_child)] = new_cost
-        
-def update_cost():
-    visited_nodes.add(str(l_child))         #Adding the child nodes to the set of visited nodes
-    visited.append(l_child)
-    new_cost=cost1+distance[str(a[1])]      #Calculating the new cost
-    distance[str(l_child)]=new_cost         #Setting the new cost of the node
-    path_track[str(a[1])].append(l_child)   #Updating the parent information
+
         
 start_time = time.time()    #Program start time
 getobstaclespace()
@@ -277,9 +202,17 @@ getobstaclespace()
 #g = [399,299]               #Goal Position Test Case1
 xmax=400                    #Width of the map
 ymax=300                    #Height of the map
-solvable=True
+solvable=False
+visited_nodes = set([])     #Set consisting of all the nodes traversed by the point robot
+visited=[]                  #Containing the list of visited nodes. Would be used for animating the visited states in the map
+child_node = []             #stores the child states after point robot moves to different positions
+path_track={}               #Dictionary storing the parent nodes of the different child nodes to backtrack the path followed
 
-while(1):
+l=0
+q = PriorityQueue()         #Setting a priority queue
+distance = {}               #Dictionary to store the distance of a node from the previous node 
+
+while(solvable!=True):
     x1=int(input('Enter x coordinate of start node'))
     y1=int(input('Enter y coordinate of start node'))
 
@@ -292,37 +225,47 @@ while(1):
         print('goal node equal to start node. Re enter your points again')
         continue
     
-    elif str(s) in oblist or str(g) in oblist: #checking if the goal or start node is in the obstacspace
+    elif str(s) in riglist or str(g) in riglist: #checking if the goal or start node is in the obstaclespace including radius and clearance
         print('Starting or goal node in obstacle space. Re enter the points again')
-        solvable=False
         continue
     
     elif (s[0] <0 or s[0]> xmax) or (s[1]<0 or s[1] > ymax) or (g[0] <0 or g[0]> xmax) or (g[1]<0 or g[1] > ymax): #Checking if the start and goal node is within the grid(400x300)
         print('start/goal < 0 or greater than grid size. Re enter the points again')
         
     else:
-        break
+        solvable=True
 
-visited_nodes = set([])     #Set consisting of all the nodes traversed by the point robot
-visited=[]                  #Containing the list of visited nodes. Would be used for animating the visited states in the map
-child_node = []             #stores the child states after point robot moves to different positions
-path_track={}               #Dictionary storing the parent nodes of the different child nodes to backtrack the path followed
 print(s)                    
 print(g)
-l=0
-q = PriorityQueue()         #Setting a priority queue
 q.put([0, s])               #Initializing the queue with a cost of 0 and the start node
-distance = {}               #Dictionary to store the distance of a node from the previous node 
+visited_nodes.add(str(s)) #Adding the start node to the set of visited nodes
+visited.append(s)         #Appending the visited list
 
 #Initializing the cost of all the points to infinity
 for i in range(0, xmax):
     for j in range(0, ymax):
         distance[str([i, j])] = 99999999 
+distance[str(s)] = 0 
+
+def cost_update(child,loc):
+    #Checking if the child nodes are visited or not, if they lie within the resolution specified and if present in the obstacle space
+    #if (str(child) not in riglist) and (child[0]>0 and child[0]<xmax) and (child[1]>0 and child[1]<ymax and child is not None):
+    if (str(child) in visited_nodes):
+        new_cost=cost1+distance[str(loc)]
+        if new_cost < distance[str(child)]:   #If node already visited updating the node with the new cost if new cost is less than the original value
+            distance[str(child)] = new_cost
+    else:
+        visited_nodes.add(str(child))         #Adding the child nodes to the set of visited nodes
+        visited.append(child)
+        new_cost=cost1+distance[str(loc)]      #Calculating the new cost
+        distance[str(child)]=new_cost         #Setting the new cost of the node
+        q.put([new_cost, child])              #Updating the priority queue
+        path_track[str(loc)].append(child)   #Updating the parent information
+            
 
 #Setting the cost of the start node to 0
-distance[str(s)] = 0 
-visited_nodes.add(str(s)) #Adding the start node to the set of visited nodes
-visited.append(s)         #Appending the visited list
+
+
 
 if solvable:
     #print('solvable')
@@ -353,8 +296,11 @@ if solvable:
         path_track[str(a[1])] = []        
                   
         #Checking if the child nodes are visited or not, if they lie within the resolution specified and if present in the obstacle space
-        if (str(l_child) not in riglist) and (l_child[0]>0 and l_child[0]<xmax) and (l_child[1]>0 and l_child[1]<ymax):
+        if (str(l_child) not in riglist) and (l_child[0]>0 and l_child[0]<xmax) and (l_child[1]>0 and l_child[1]<ymax and l_child is not None):
+            #cost_update(l_child,a[1])
+
             if (str(l_child) in visited_nodes):
+                
                 new_cost=cost1+distance[str(a[1])]
                 if new_cost < distance[str(l_child)]:   #If node already visited updating the node with the new cost if new cost is less than the original value
                     distance[str(l_child)] = new_cost
@@ -365,9 +311,11 @@ if solvable:
                 distance[str(l_child)]=new_cost         #Setting the new cost of the node
                 q.put([new_cost, l_child])              #Updating the priority queue
                 path_track[str(a[1])].append(l_child)   #Updating the parent information
-        
+
         #Similarly perform for the remaining nodes in different directions
-        if (str(r_child) not in riglist) and (r_child[0]>0 and r_child[0]<xmax) and (r_child[1]>0 and r_child[1]<ymax):
+        if (str(r_child) not in riglist) and (r_child[0]>0 and r_child[0]<xmax) and (r_child[1]>0 and r_child[1]<ymax and r_child is not None):
+            #cost_update(r_child,a[1])
+
             if (str(r_child) in visited_nodes):
                 new_cost=cost2+distance[str(a[1])]
                 if new_cost < distance[str(r_child)]:   #If node already visited updating the node with the new cost if new cost is less than the original value
@@ -379,8 +327,10 @@ if solvable:
                 distance[str(r_child)]=new_cost         #Setting the new cost of the node
                 q.put([new_cost, r_child])              #Updating the priority queue
                 path_track[str(a[1])].append(r_child)   #Updating the parent information
-                
-        if (str(u_child) not in riglist) and (u_child[0]>0 and u_child[0]<xmax) and (u_child[1]>0 and u_child[1]<ymax):
+   
+        if (str(u_child) not in riglist) and (u_child[0]>0 and u_child[0]<xmax) and (u_child[1]>0 and u_child[1]<ymax and u_child is not None):
+            #cost_update(u_child,a[1])
+
             if (str(u_child) in visited_nodes):
                 new_cost=cost3+distance[str(a[1])]
                 if new_cost < distance[str(u_child)]:   #If node already visited updating the node with the new cost if new cost is less than the original value
@@ -392,8 +342,10 @@ if solvable:
                 distance[str(u_child)]=new_cost         #Setting the new cost of the node
                 q.put([new_cost, u_child])              #Updating the priority queue
                 path_track[str(a[1])].append(u_child)   #Updating the parent information
-                
-        if (str(d_child) not in riglist) and (d_child[0]>0 and d_child[0]<xmax) and (d_child[1]>0 and d_child[1]<ymax):
+
+        if (str(d_child) not in riglist) and (d_child[0]>0 and d_child[0]<xmax) and (d_child[1]>0 and d_child[1]<ymax and d_child is not None):
+            #cost_update(d_child,a[1])
+
             if (str(d_child) in visited_nodes):
                 new_cost=cost4+distance[str(a[1])]
                 if new_cost < distance[str(d_child)]:   #If node already visited updating the node with the new cost if new cost is less than the original value
@@ -404,9 +356,10 @@ if solvable:
                 new_cost=cost4+distance[str(a[1])]      #Calculating the new cost
                 distance[str(d_child)]=new_cost         #Setting the new cost of the node
                 q.put([new_cost, d_child])              #Updating the priority queue
-                path_track[str(a[1])].append(d_child)   #Updating the parent information
-                
-        if (str(ul_child) not in riglist) and (ul_child[0]>0 and ul_child[0]<xmax) and (ul_child[1]>0 and ul_child[1]<ymax):
+   
+        if (str(ul_child) not in riglist) and (ul_child[0]>0 and ul_child[0]<xmax) and (ul_child[1]>0 and ul_child[1]<ymax and ul_child is not None):
+            #cost_update(ul_child,a[1])
+
             if (str(ul_child) in visited_nodes):
                 new_cost=cost5+distance[str(a[1])]
                 if new_cost < distance[str(ul_child)]:   #If node already visited updating the node with the new cost if new cost is less than the original value
@@ -418,8 +371,10 @@ if solvable:
                 distance[str(ul_child)]=new_cost         #Setting the new cost of the node
                 q.put([new_cost, ul_child])              #Updating the priority queue
                 path_track[str(a[1])].append(ul_child)   #Updating the parent information
-                
-        if (str(dl_child) not in riglist) and (dl_child[0]>0 and dl_child[0]<xmax) and (dl_child[1]>0 and dl_child[1]<ymax):
+
+        if (str(dl_child) not in riglist) and (dl_child[0]>0 and dl_child[0]<xmax) and (dl_child[1]>0 and dl_child[1]<ymax and dl_child is not None):
+            #cost_update(dl_child,a[1])
+
             if (str(dl_child) in visited_nodes):
                 new_cost=cost6+distance[str(a[1])]
                 if new_cost < distance[str(dl_child)]:   #If node already visited updating the node with the new cost if new cost is less than the original value
@@ -431,8 +386,10 @@ if solvable:
                 distance[str(dl_child)]=new_cost         #Setting the new cost of the node
                 q.put([new_cost, dl_child])              #Updating the priority queue
                 path_track[str(a[1])].append(dl_child)   #Updating the parent information
-                
-        if (str(ur_child) not in riglist) and (ur_child[0]>0 and ur_child[0]<xmax) and (ur_child[1]>0 and ur_child[1]<ymax):
+
+        if (str(ur_child) not in riglist) and (ur_child[0]>0 and ur_child[0]<xmax) and (ur_child[1]>0 and ur_child[1]<ymax and ur_child is not None):
+            #cost_update(ur_child,a[1])
+
             if (str(ur_child) in visited_nodes):
                 new_cost=cost7+distance[str(a[1])]
                 if new_cost < distance[str(ur_child)]:   #If node already visited updating the node with the new cost if new cost is less than the original value
@@ -444,8 +401,10 @@ if solvable:
                 distance[str(l_child)]=new_cost         #Setting the new cost of the node
                 q.put([new_cost, ur_child])              #Updating the priority queue
                 path_track[str(a[1])].append(ur_child)   #Updating the parent information
-                
-        if (str(dr_child) not in riglist) and (dr_child[0]>0 and dr_child[0]<xmax) and (dr_child[1]>0 and dr_child[1]<ymax):
+
+        if (str(dr_child) not in riglist) and (dr_child[0]>0 and dr_child[0]<xmax) and (dr_child[1]>0 and dr_child[1]<ymax and dr_child is not None):
+            #cost_update(dr_child,a[1])
+
             if (str(dr_child) in visited_nodes):
                 new_cost=cost8+distance[str(a[1])]
                 if new_cost < distance[str(dr_child)]:   #If node already visited updating the node with the new cost if new cost is less than the original value
@@ -457,7 +416,6 @@ if solvable:
                 distance[str(dr_child)]=new_cost         #Setting the new cost of the node
                 q.put([new_cost, dr_child])              #Updating the priority queue
                 path_track[str(a[1])].append(dr_child)   #Updating the parent information
-            
 
         #cv2.imshow('maze',img)
         #cv2.waitKey(1)
@@ -481,26 +439,6 @@ while val!=goal:
 path_track_list=path_track_list[::-1]
 path_track_list.append(final_state) 
 
-# File nodePath.txt to write all the nodes traversed from start to goal
-F = open('nodePath11.txt', 'w')
-# List of numbers
-for c in visited:
-    for i in c:
-        F.write(str(i)+' ')
-    F.write('\n')
-# Close the file
-F.close()
-
-path_track_list=path_track_list[::-1]
-# File nodePath.txt to backtrack the paths followed from goal to start
-F = open('nodetrack11.txt', 'w')
-# List of numbers
-for c in path_track_list:
-    for i in c:
-        F.write(str(i)+' ')
-    F.write('\n')
-# Close the file
-F.close()
 
 #Printing the total time taken to reach goal state and backtrack
 print("total time:")
