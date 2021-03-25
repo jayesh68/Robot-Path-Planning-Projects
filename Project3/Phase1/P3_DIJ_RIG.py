@@ -46,7 +46,7 @@ def cost_update(child,loc,cost):
             new_cost=cost+distance[str(loc)]
             if new_cost < distance[str(child)]:   #If node already visited updating the node with the new cost if new cost is less than the original value
                 distance[str(child)] = new_cost
-               #path_track[str(loc)].append(child)   #Updating the parent information
+                path_track[str(loc)].append(child)   #Updating the parent information
         else:
             visited_nodes.add(str(child))         #Adding the child nodes to the set of visited nodes
             visited.append(child)
