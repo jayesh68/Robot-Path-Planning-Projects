@@ -46,6 +46,7 @@ def cost_update(child,loc,cost):
             new_cost=cost+distance[str(loc)]
             if new_cost < distance[str(child)]:   #If node already visited updating the node with the new cost if new cost is less than the original value
                 distance[str(child)] = new_cost
+               #path_track[str(loc)].append(child)   #Updating the parent information
         else:
             visited_nodes.add(str(child))         #Adding the child nodes to the set of visited nodes
             visited.append(child)
@@ -151,7 +152,7 @@ def visualization(path_track_list):
                 y = abs(300-path[1])
                 pygame.display.flip()
                 pygame.draw.rect(gameDisplay, white, [x,y,1,1])
-                pygame.image.save(gameDisplay, f"/home/jayesh/Documents/ENPM661_PROJECT1/map1/{i}.png")  #Saving the images to create a video 
+                #pygame.image.save(gameDisplay, f"/home/jayesh/Documents/ENPM661_PROJECT1/map1/{i}.png")  #Saving the images to create a video 
                 i+=1                                                                                     #uncomment if not required
                 pygame.time.wait(0)                    
         
@@ -163,7 +164,7 @@ def visualization(path_track_list):
             y = abs(300-path[1])
             pygame.display.flip()
             pygame.draw.rect(gameDisplay, (255,5,5), [x,y,1,1])
-            pygame.image.save(gameDisplay, f"/home/jayesh/Documents/ENPM661_PROJECT1/map1/{i}.png")         #Saving the images to create a video
+            #pygame.image.save(gameDisplay, f"/home/jayesh/Documents/ENPM661_PROJECT1/map1/{i}.png")         #Saving the images to create a video
             i+=1                                                                                            #uncomment if not required
             pygame.time.wait(10)
     
@@ -177,12 +178,12 @@ if __name__ == "__main__":
     oblist1, riglist=act.getobstaclespace()
     
     while True:
-        x1=int(input('Enter x coordinate of start node'))
-        y1=int(input('Enter y coordinate of start node'))
+        x1=int(input('Enter x coordinate of start node: '))
+        y1=int(input('Enter y coordinate of start node: '))
 
         s = [x1,y1]
-        x2=int(input('Enter x coordinate of goal node'))
-        y2=int(input('Enter y coordinate of goal node'))
+        x2=int(input('Enter x coordinate of goal node: '))
+        y2=int(input('Enter y coordinate of goal node: '))
         g = [x2,y2]                 #Goal Position Test Case2  
         
         if s == g:  #Checking if goal node is the same as the start node
@@ -223,29 +224,3 @@ if __name__ == "__main__":
     print(time.time()-start_time)  
 
     visualization(path_track_list)
-#### Code Execution ends here #######
-'''
-#Writing to video. Uncomment if required
-size=(400,300)
-out = cv2.VideoWriter('p2dijkstrarigid.avi',cv2.VideoWriter_fourcc(*'DIVX'), 800, size)
-file_list=os.listdir('/home/jayesh/Documents/ENPM661_PROJECT1/map1')
-new_list=[]
-for file in file_list:
-    #print(file)
-    a=file.split('.')[0]
-    #print(a)
-    new_list.append(a)
-      
-#print(new_list)
-for i in range(0,len(new_list)):
-    filename=f'/home/jayesh/Documents/ENPM661_PROJECT1/map1/{i}.png'
-    #print(filename)
-    j+=1 
-    #print(filename)
-    img = cv2.imread(filename)
-    out.write(img)
-#cv2.imshow('obstacle',img)
-out.release()
-cv2.waitKey(0)
-cv2.destroyAllWindows()
-'''
