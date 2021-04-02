@@ -19,6 +19,7 @@ from actSetStar import actionSet
 
 
 goal=[]
+#g=[]
 oblist1=[]       #List to store the obstacle coordinates for final animation
 riglist=set([])
 radius=10
@@ -27,13 +28,25 @@ dist=radius+clearance
 xmax=400                    #Width of the map
 ymax=300                    #Height of the map
 threshold=0.5
+visited=[]
 cost2come = np.full((801,601,13),np.inf)
 cost2goal = np.full((801,601,13),np.inf)
 totCost = np.full((801,601,13),np.inf)
 solvable=False
 visited_nodes = np.zeros((801,601,13))
-visited=[]                  #Containing the list of visited nodes. Would be used for animating the visited states in the map
 path_track={}               #Dictionary storing the parent nodes of the different child nodes to backtrack the path followed
+
+pygame.init()
+
+display_width = 400
+display_height = 300
+
+gameDisplay = pygame.display.set_mode((display_width,display_height),pygame.SCALED)
+pygame.display.set_caption('Djikstra Animation')
+
+black = (0,0,0)         #Color represnting the background of image
+white = (0,255,255)     #Color respresenting the visited nodes
+yellow=(255,255,0)      #Color representing the obstacles
 
 l=0
 q = PriorityQueue()         #Setting a priority queue
@@ -83,7 +96,11 @@ def cost_update(child,par,cost):
             totCost1 =cost2come[2*child[0]][2*child[1]][int(child[2]/30)]+cost2goal[2*child[0]][2*child[1]][int(child[2]/30)]
             if totCost1 < totCost[2*child[0]][2*child[1]][int(child[2]/30)]:
                totCost[2*child[0]][2*child[1]][int(child[2]/30)] = totCost1
-               path_track[str([par[1][0],par[1][1]])].append([child[0],child[1]])   
+               #print('par',par[1][0],par[1][1])
+               #print('child',child[0],child[1])
+               child=[2*child[0],2*child[1],int(child[2]/30)]
+               path_track[str([2*par[1][0],2*par[1][1],int(par[1][2]/30)])].append(child)  
+               
                
         else:
             #print('Adding')
@@ -92,8 +109,13 @@ def cost_update(child,par,cost):
             cost2goal[2*child[0]][2*child[1]][int(child[2]/30)]=cos2goal([child[0],child[1]],goal)
             totCost[2*child[0]][2*child[1]][int(child[2]/30)]=cost2come[2*child[0]][2*child[1]][int(child[2]/30)]+cost2goal[2*child[0]][2*child[1]][int(child[2]/30)]
             q.put([totCost[2*child[0]][2*child[1]][int(child[2]/30)], child])              #Updating the priority queue
-            #print('par',par[1][0],par[1][1])
-            path_track[str([par[1][0],par[1][1]])].append([child[0],child[1]])
+            #print('par',2*par[1][0],2*par[1][1],par[1][2]/30)
+            #print('child',2*child[0],2*child[1],child[2]/30)
+            #path_track[str([2*par[1][0],2*par[1][1],int(par[1][2]/30)])].append([2*child[0]][2*child[1]][int(child[2]/30)])
+            child=[2*child[0],2*child[1],int(child[2]/30)]
+            path_track[str([2*par[1][0],2*par[1][1],int(par[1][2]/30)])].append(child)
+            pygame.display.flip()
+            pygame.draw.rect(gameDisplay, white, [child[0]/2,300-child[1]/2,1,1])
 
 def main():
     l=0
@@ -104,109 +126,84 @@ def main():
         #print(g[0],g[1],a[1][0],a[1][1])
         
         #Inititalizing the dictionary to store information related to the parent node
-        path_track[str([a[1][0],a[1][1]])] = []
+        
         
         #Checking if goal is reached or not
         if goalReachCheck([a[1][0],a[1][1]],[g[0],g[1]]):
-            path_track[str([a[1][0],a[1][1]])].append([g[0],g[1]])
+            
+            print('goal',a[1][0],a[1][1],g)
+            g[2]=30
+            i=[g[0]*2,g[1]*2,int(g[2]/30)]
+            visited.append([g[0],g[1]])
+            #path_track[str([a[1][0],a[1][1]])] = []
+            path_track[str([2*a[1][0],2*a[1][1],int(a[1][2]/30)])].append(i)
             print('goal reached')
             break
 
         l+=1
         
-        
         #Getting the child nodes after moving in different positions
-        childz = act.ActionZero(a[1],1)
+        childz = act.ActionZero(a[1],3)
         #print(a[1][0],a[1][1],childz[0],childz[1])
         costz=cos2come([a[1][0],a[1][1]],[childz[0],childz[1]])
-        cost_update(childz, a, costz)
-        childp30 = act.ActionP30(a[1],30,1)
+        cost_update(childz, a, 1)
+        childp30 = act.ActionP30(a[1],30,3)
         costp30=cos2come([a[1][0],a[1][1]],[childp30[0],childp30[1]])
-        cost_update(childp30, a, costp30)
-        childp60= act.ActionP60(a[1],30,1)
+        cost_update(childp30, a, 1)
+        childp60= act.ActionP60(a[1],30,3)
         costp60=cos2come([a[1][0],a[1][1]],[childp60[0],childp60[1]])
-        cost_update(childp60, a, costp60)
-        childn30 = act.ActionN30(a[1],30,1)
+        cost_update(childp60, a, 1)
+        childn30 = act.ActionN30(a[1],30,3)
         costn30=cos2come([a[1][0],a[1][1]],[childn30[0],childn30[1]])
-        cost_update(childn30, a, costn30)
-        childn60 = act.ActionN30(a[1],30,1)
+        cost_update(childn30, a, 1)
+        childn60 = act.ActionN30(a[1],30,3)
         costn60=cos2come([a[1][0],a[1][1]],[childn60[0],childn60[1]])
-        cost_update(childn60, a, costn60)
+        cost_update(childn60, a, 1)
 
 def backtracking (start, goal):
     #Backtracking to find the paths traversed from the initial state to the final state
     final_state = goal
     val = goal
-    print('val',val)
+    #print('val',val)
     goal = start
     path_track_list=[]
     #print('Parent track',path_track)
+    #print('start',start)
     path_track_list.append(final_state)
-
     while val!=goal:
         #print('val',val)
         for key, values in path_track.items():
             #print('key',key,values,'val',val)
+            
             while val in values:
                 #print('val',val)
+                #print('appending')
                 key= ast.literal_eval(key) #converting strings of lists to pure lists
                 val = key
                 path_track_list.append(val)
-                
-    # File nodePath.txt to write all the nodes traversed from start to goal
-    F = open('nodePath11.txt', 'w')
-    # List of numbers
-    for c in visited:
-        for i in c:
-            F.write(str(i)+' ')
-        F.write('\n')
-    # Close the file
-    F.close()
 
-    path_track_list=path_track_list[::-1]
-    # File nodePath.txt to backtrack the paths followed from goal to start
-    F = open('nodetrack11.txt', 'w')
-    # List of numbers
-    for c in path_track_list:
-        for i in c:
-            F.write(str(i)+' ')
-        F.write('\n')
-        # Close the file
-    F.close()
     return path_track_list
 
-def visualization(path_track_list):
+def visualization():
     #Creating an animation using pygame
-    pygame.init()
-
-    display_width = 400
-    display_height = 300
-
-    gameDisplay = pygame.display.set_mode((display_width,display_height),pygame.SCALED)
-    pygame.display.set_caption('Djikstra Animation')
-
-    black = (0,0,0)         #Color represnting the background of image
-    white = (0,255,255)     #Color respresenting the visited nodes
-    yellow=(255,255,0)      #Color representing the obstacles
-
+    
     i=0
     #surf = pygame.surfarray.make_surface(img)
 
     clock = pygame.time.Clock()
     done = False
-    while not done:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                done = True
+    
 
-        gameDisplay.fill(black)
+    gameDisplay.fill(black)
 
         #Setting the obstacle space in the animation
-        for path in oblist1:
-                x = int(path[0])
-                y = abs(300-int(path[1]))
-                pygame.draw.rect(gameDisplay, yellow, [x,y,1,1])
-
+    for path in oblist1:
+        x = int(path[0])
+        y = abs(300-int(path[1]))
+        #pygame.display.flip()
+        pygame.draw.rect(gameDisplay, yellow, [x,y,1,1])
+                #pygame.time.wait(0)
+        '''        
         #print('Visited',visited)
         #Visualizing the visited states in the animation
         for path in visited:
@@ -217,29 +214,13 @@ def visualization(path_track_list):
                 #pygame.image.save(gameDisplay, f"/home/jayesh/Documents/ENPM661_PROJECT1/map1/{i}.png")  #Saving the images to create a video
                 i+=1                                                                                     #uncomment if not required
                 pygame.time.wait(0)
-
-        #Visualizing the path taken from start to node
-        for path in path_track_list:
-            pygame.time.wait(10)
-            #time.sleep(0.00005)
-            x = path[0]
-            y = abs(300-path[1])
-            pygame.display.flip()
-            pygame.draw.rect(gameDisplay, (255,5,5), [x,y,1,1])
-            #pygame.image.save(gameDisplay, f"/home/jayesh/Documents/ENPM661_PROJECT1/map1/{i}.png")         #Saving the images to create a video
-            i+=1                                                                                            #uncomment if not required
-            pygame.time.wait(10)
-
-        done = True
-
-    pygame.quit()
-
+        '''
 
 #### Code execution starts here #####
 if __name__ == "__main__":
 
     oblist1, riglist=act.getobstaclespace()
-
+    visualization()
     while True:
         x1=int(input('Enter x coordinate of start node: '))
         y1=int(input('Enter y coordinate of start node: '))
@@ -275,7 +256,7 @@ if __name__ == "__main__":
 
     print(s)
     print(g)
-    
+    visited.append(start)
     visited_nodes[2*s[0]][2*s[1]][int(s[2]/30)]=1
     #cost2come[0][0][0]=1
     #print(cost2come[0][0][0],s[1],s[2],s[0])
@@ -289,17 +270,41 @@ if __name__ == "__main__":
     totCost[2*s[0]][2*s[1]][int(s[2]/30)] = cost2come[2*s[0]][2*s[1]][int(s[2]/30)] + cost2goal[2*s[0]][2*s[1]][int(s[2]/30)]
     q.put([totCost[2*s[0]][2*s[1]][int(s[2]/30)], s])               #Initializing the queue with a Total cost and the start node
     
+    for i in range(0, goalx+1):
+        for j in range(0, goaly+1):
+            for k in range(0,13):
+                path_track[str([2*i, 2*j, k])] = []
+    
+    #print(path_track)
+            
     start_time = time.time()    #Program start time
     main()
     #Time to reach goal state
-    print(time.time()-start_time)
+    print('time to reach goal',time.time()-start_time)
     
-    path_track_list = backtracking(start, goal)
+    s=[2*s[0],2*s[1],int(s[2]/30)]
+    g=[2*g[0],2*g[1],int(g[2]/30)]
+    print(g)
+    path_track_list = backtracking(s, g)
+    
+    path=[path_track_list[0],path_track_list[1]]
+    print(path)
+    for path in path_track_list:
+        #time.sleep(0.00005)
+        #pygame.time.wait(10)
+        x = path[0]/2
+        y = abs(300-path[1]/2)
+        pygame.display.flip()
+        pygame.draw.rect(gameDisplay, (255,5,5), [x,y,1,1])
+        #pygame.image.save(gameDisplay, f"/home/jayesh/Documents/ENPM661_PROJECT1/map1/{i}.png")         #Saving the images to create a video                                                                                         #uncomment if not required
+        pygame.time.wait(10)
+    
+    pygame.quit()
     #Printing the total time taken to reach goal state and backtrack
     print("total time:")
     print(time.time()-start_time)
 
-    #visualization(path_track_list)
+    
 
 #### Code Execution ends here #######
 '''
