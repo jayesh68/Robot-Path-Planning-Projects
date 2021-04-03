@@ -116,7 +116,9 @@ def cost_update(child,par,cost):
             path_track[str([2*par[1][0],2*par[1][1],int(par[1][2]/30)])].append(child)
             pygame.display.flip()
             pygame.draw.rect(gameDisplay, white, [child[0]/2,300-child[1]/2,1,1])
-
+            #pygame.time.wait(5)
+            
+                
 def main():
     l=0
     while not q.empty():  #Process when queue is not empty
@@ -159,6 +161,7 @@ def main():
         childn60 = act.ActionN30(a[1],30,3)
         costn60=cos2come([a[1][0],a[1][1]],[childn60[0],childn60[1]])
         cost_update(childn60, a, 1)
+        print(childz,childp30,childp60,childn30,childn60)
 
 def backtracking (start, goal):
     #Backtracking to find the paths traversed from the initial state to the final state
@@ -270,8 +273,8 @@ if __name__ == "__main__":
     totCost[2*s[0]][2*s[1]][int(s[2]/30)] = cost2come[2*s[0]][2*s[1]][int(s[2]/30)] + cost2goal[2*s[0]][2*s[1]][int(s[2]/30)]
     q.put([totCost[2*s[0]][2*s[1]][int(s[2]/30)], s])               #Initializing the queue with a Total cost and the start node
     
-    for i in range(0, goalx+1):
-        for j in range(0, goaly+1):
+    for i in range(0, 401):
+        for j in range(0, 301):
             for k in range(0,13):
                 path_track[str([2*i, 2*j, k])] = []
     
@@ -291,7 +294,7 @@ if __name__ == "__main__":
     print(path)
     for path in path_track_list:
         #time.sleep(0.00005)
-        #pygame.time.wait(10)
+        pygame.time.wait(10)
         x = path[0]/2
         y = abs(300-path[1]/2)
         pygame.display.flip()
