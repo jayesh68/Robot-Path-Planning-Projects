@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 Created on Tue Mar 23 08:20:17 2021
-@authors: jayesh, yoseph
+@authors: Jayesh Jayashankar, Yoseph Kebede
 """
 
 import numpy as np
