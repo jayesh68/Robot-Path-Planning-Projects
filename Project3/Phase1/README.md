@@ -1,6 +1,8 @@
 HOW TO RUN The Mobile Robot Search: Project 3 Phase 1
 
 a) Download python scricpt into a given path/folder
+
+
 b) Make sure all of the sourced python files are downloaded into the same folder
     ie, actionSet.py
 c) Finally, run p3_dij_rig.py in a python interpretor
