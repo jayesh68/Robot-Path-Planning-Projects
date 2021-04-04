@@ -9,7 +9,8 @@ HOW TO RUN The Mobile Robot Search: Project 3 Phase 2
 
 4. Follow User interactive instructions to search for start and goal nodes in the given environment
     - enter the start nodes as instructed; 
-**Caution: If start nodes are created within 5 units of clearance edges, nodes might expand to
+    
+##**Caution: If start nodes are created within 5 units of clearance edges, nodes might expand to
 	   region inside edge clearance in which case if all 5 children get expanded into that space, 
 	   search will terminate abnormally with incorrect results.
 
