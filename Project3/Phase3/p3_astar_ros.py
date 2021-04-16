@@ -59,7 +59,7 @@ im_count=0
 pygame.init()               #Initializing Pygame
 display_width = 1000         #Frame width
 display_height = 1000        #Frame height
-gameDisplay = pygame.display.set_mode((display_width,display_height),pygame.SCALED)
+gameDisplay = pygame.display.set_mode((display_width,display_height),pygame.RESIZABLE)
 pygame.display.set_caption('A* Animation')
 black = (0,0,0)         #Color represnting the background of image
 white = (0,255,255)     #Color respresenting the visited nodes
@@ -77,7 +77,7 @@ def c2gCalc(start,goal):
 #Confirming expanded node has reached goal space
 def goalReachCheck(start,goal):
     print('checking goal')
-    goal_thresh= 1.5
+    goal_thresh= 10
     if ((start[0]-goal[0]) ** 2 + (start[1]-goal[1])**2) <= (goal_thresh**2):
         return True
     else:
@@ -93,10 +93,10 @@ def round_15(child_ang):
 def cost_update(child,par,cost):
     child_ang=int((round(child[2]/15)*15)//15)
     par_ang=int((round(par[1][2]/15)*15)//15)
-    print('cost calc')
+    #print('cost calc')
     x= child[0]; y = child[1]; z=int(child_ang)
     a = par[1][0]; b = par[1][1]; c = int(par_ang)
-    print('child par angle',child_ang,par_ang)
+    #print('child par angle',child_ang,par_ang)
     if ((str([x,y]) not in riglist) and (x>0 and x<xmax) and (y>0 and y<ymax) and (child is not None)):
         if visited_nodes[2*x][2*y][z]==1:   
             print('visited')
@@ -106,22 +106,32 @@ def cost_update(child,par,cost):
             if totCost1 < totCost[2*x][2*y][z]:
                totCost[2*x][2*y][z] = totCost1
                child=[2*x,2*y,z]
-               path_track[str([2*a,2*b,c])].append(child)  
+               if str([2*a,2*b,c]) in path_track:
+                   path_track[str([2*a,2*b,c])].append(child) 
+               else:
+                   path_track[str([2*a,2*b,c])]=[]
+                   path_track[str([2*a,2*b,c])].append(child) 
                                              
         else:
-            print('not visited')
+            #print('not visited')
             visited_nodes[2*x][2*y][z]=1
             cost2come[2*x][2*y][z]=cost+cost2come[2*a][2*b][c]     #Calculating the new cost
             cost2goal[2*x][2*y][z]=c2gCalc([x,y],[g[0],g[1]])
             totCost[2*x][2*y][z]=cost2come[2*x][2*y][z]+cost2goal[2*x][2*y][z]
+            #print(child,'q')
             q.put([totCost[2*x][2*y][z], child])                   #Updating the priority queue
             child=[2*x,2*y,z]
-            path_track[str([2*a,2*b,c])].append(child)
-    
+            #path_track[str([2*a,2*b,c])] = {}
+            if str([2*a,2*b,c]) in path_track:
+                path_track[str([2*a,2*b,c])].append(child)
+            else:
+                path_track[str([2*a,2*b,c])]=[]
+                path_track[str([2*a,2*b,c])].append(child)
+            pygame.event.get()     
             pygame.display.flip()
             pygame.draw.rect(gameDisplay, white, [child[0]/2,1000-child[1]/2,1,1])
             #pygame.image.save(gameDisplay, f"/home/jayesh/Documents/ENPM661_PROJECT1/map1/{im_count}.png")
-            pygame.time.wait(50)
+            #pygame.time.wait(5)
             #im_count+=1
 
     else:
@@ -129,7 +139,7 @@ def cost_update(child,par,cost):
         
 def main(rpm1,rpm2):
     l=0
-    while not q.empty():                                        #Process when queue is not empty
+    while not q.empty(): #and l!=1:                                        #Process when queue is not empty
         
         a=q.get()                                               #Varibale to store the cost and node position
         #print('parent',a[1])
@@ -142,18 +152,20 @@ def main(rpm1,rpm2):
             print('goal',x_n,y_n,g)
             i=[x_g*2,y_g*2,z_g]
             visited.append([x_g,y_g])
+            path_track[str([2*x_n,2*y_n,z_n])]=[]
             path_track[str([2*x_n,2*y_n,z_n])].append(i)
             print('goal reached')
             break
-
+        
         l+=1
         print(l)
         #Getting the child nodes after moving in different positions with step size of 1 unit
         child1,cost1 = act.Action(a[1],0,rpm1)
-        print('cost1',cost1)
+        #print(child1)
+        #print('cost1',cost1)
         cost_update(child1, a, cost1)
         child2,cost2 = act.Action(a[1],rpm1,0)
-        print('cost2',cost2)
+        #print('cost2',cost2,child2)
         cost_update(child2, a, cost2)
         child3,cost3= act.Action(a[1],rpm1,rpm1)
         cost_update(child3, a, cost3)
@@ -167,23 +179,26 @@ def main(rpm1,rpm2):
         cost_update(child7, a, cost7)
         child8,cost8 = act.Action(a[1],rpm2,rpm1)
         cost_update(child8, a, cost8)
-              
+        #print(cost1,cost2,cost3,cost4,cost5,cost6,cost7,cost8)
 
 def backtracking (start, goal):         #Backtracking to find the paths traversed from the initial state to the final state
     val = goal
     path_track_list=[]
     path_track_list.append(val)
-
-    while val!=start:
-        for key, values in path_track.items():
-            while val in values:
-                key= ast.literal_eval(key)                  #converting strings of lists to pure lists
-                val = key
-                path_track_list.append(val)
-
+    try:
+        while val!=start:
+            for key, values in path_track.items():
+                while val in values:
+                    key= ast.literal_eval(key)                  #converting strings of lists to pure lists
+                    val = key
+                    path_track_list.append(val)
+    except KeyError:
+        print('value not found')
+        
     return path_track_list
 
-def visualization():                            #Creating an animation using pygame    
+def visualization():                            #Creating an animation using pygame 
+    pygame.event.get()    
     gameDisplay.fill(black)
 
     #Setting the obstacle space in the animation
@@ -254,14 +269,14 @@ if __name__ == "__main__":
     #print(totCost[2*x1][2*y1][z])
     #Initializing the queue with a Total cost and the start node
     q.put([totCost[2*x1][2*y1][z], s])              
-    
+    '''
     #Initializing Parent Child dictionary
     for i in range(0, xmax+1):
         for j in range(0, ymax+1):
             for k in range(0,25):
                 #print('stuck')
                 path_track[str([2*i, 2*j, k])] = []
-            
+    '''
     start_time = time.time()            #Program start time
     print('before main')
     main(rpm1,rpm2)                              #Executing search
@@ -273,23 +288,39 @@ if __name__ == "__main__":
     s=[2*x1,2*y1,int(s[2]/15)]
     g=[2*x2,2*y2,int(g[2]/15)]
     print(g)
-    '''
+
+    print('path track',path_track)
     #Performing backtracking to obtain list for optimal path
     path_track_list = backtracking(s, g)
     
-    path=[path_track_list[0],path_track_list[1]]
-    print(path)
+    path1=[]
+    #print(path)
+    
+    #print('path track',path_track_list)
     for path in path_track_list:
+        pygame.event.get()
         x = path[0]/2
-        y = abs(510-path[1]/2)
-        pygame.display.flip()
-        pygame.draw.rect(gameDisplay, (255,5,5), [x,y,1,1])
+        y = abs(1000-path[1]/2)
+        path1.append((x,y))
+        #pygame.display.flip()
+        #print('displaying')
+        print(x,y)
+        #pygame.draw.rect(gameDisplay, (255,5,5), [x,y,10,10])
         #pygame.image.save(gameDisplay, f"/home/jayesh/Documents/ENPM661_PROJECT1/map1/{im_count}.png")         #Saving the images to create a video                                                                                         #uncomment if not required
         #im_count+=1
-        pygame.time.wait(50)
-    '''
+       #pygame.time.wait(5000)
+    while True: 
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+             
+        pygame.display.flip()
+        pygame.draw.lines(gameDisplay, (255,5,5), False, path1, 2)
+        pygame.time.wait(500)
+        pygame.display.update()
+
     #Terminate Pygame
-    pygame.quit()
+    #pygame.quit()
 
     #Print the total time taken to reach goal state and backtrack
     print("total time:")
