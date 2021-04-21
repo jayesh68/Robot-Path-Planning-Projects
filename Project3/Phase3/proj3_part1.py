@@ -35,9 +35,6 @@ s_list=[]
 #Obstacle variables
 oblist1=[]                  #List to store the obstacle coordinates for final andimation
 riglist=set([])             #List to store obstacle with clearance
-radius=10                   #Radius of Mobile Robot
-clearance=5                 #Clearance distance from/around obstacles
-dist=radius+clearance       #Total clearance between point robot and obstacle
 
 #Enironment variables
 xmax=1000                   #Width of the map
@@ -147,7 +144,7 @@ def Action(curr_node,ul,ur):
 def getobstaclespace():
     oblist1=[]       #List to store the obstacle coordinates for final animation
     riglist=set([])
-    radius=35.4
+    radius=17.3
     clearance=5
     dist= radius + clearance
     #xmax=510
@@ -204,8 +201,8 @@ def getobstaclespace():
     
 
 def obstaclecheck(x,y):
-    radius=35.4
-    clearance=5
+    radius=17.4
+    clearance=3.8
     dist= radius + clearance
 
 
@@ -234,9 +231,12 @@ def obstaclecheck(x,y):
     if x>=(xmax-dist) and x<=(xmax):
         return True
     
-    #if x>=0 and x<=dist:
-     #   return True
+    if x>=0 and x<=dist:
+        return True
 
+    if y>=0 and y<=dist:
+        return True
+    
 #Nodes cost calculation
 def c2gCalc(start,goal):
     #euclidean distance of goal
