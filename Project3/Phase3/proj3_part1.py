@@ -84,10 +84,15 @@ def Action(curr_node,ul,ur):
     #print('rpms',ul,ur)
     dt=0.1
     cost=0
+    xs=x
+    ys=y
+    
     while t < 1:
         t = t + dt
-        xs=x
-        ys=y
+        if obstaclecheck(x, y)!=True and x<=xmax and y<=ymax and x>=0 and y>=0:
+            xs=x
+            ys=y
+        
         dx = 0.5*r * (ul + ur) * math.cos(ang*math.pi/180) * dt
         dy = 0.5*r * (ul + ur) * math.sin(ang*math.pi/180) * dt
         dtheta = (r / l) * (ur - ul) * dt
@@ -99,12 +104,15 @@ def Action(curr_node,ul,ur):
         cost=cost+ math.sqrt(math.pow((0.5*r * (ul + ur) * math.cos(ang*math.pi/180) * dt),2)+math.pow((0.5*r * (ul + ur) * math.sin(ang*math.pi/180) * dt),2))
         x+= dx
         y+= dy
-        if (obstaclecheck(x, y)!=True) and (obstaclecheck(xs, ys)!=True) and x<=xmax and y<=ymax and x>=0 and y>=0 and xs>0 and ys > 0 and xs<xmax and ys<ymax: 
+        if obstaclecheck(x, y)!=True and obstaclecheck(xs, ys)!=True and x<=xmax and y<=ymax and x>=0 and y>=0 and xs>0 and ys > 0 and xs<xmax and ys<ymax: 
+            #xs=x
+            #ys=y
             plt.plot([xs, x], [ys, y], color="red")
-            n_list.append([round(x,2),round(y,2)])
-            s_list.append([round(xs,2),round(ys,2)])
-            a_list.append([round(xs,2),round(ys,2)])
-            b_list.append([round(x,2),round(y,2)])
+            n_list.append([x,y])
+            s_list.append([xs,ys])
+            a_list.append([xs,ys])
+            b_list.append([x,y])
+            #print(a_list,b_list)
             pygame.event.get()     
             pygame.display.flip()
             pygame.draw.rect(gameDisplay, white, [xs,1000-ys,1,1])
@@ -120,7 +128,7 @@ def Action(curr_node,ul,ur):
             '''
         #plt.show()
         #print('adding',x,y)
-        print(a_list,b_list)
+        #print(a_list,b_list)
         
     if ang >= 360 or ang<0:
         ang=ang%360
@@ -131,7 +139,7 @@ def Action(curr_node,ul,ur):
     #print('act',x,y,ang)
     #ang=int((round(ang/15)*15)//15)
     new_node = [x,y,int(ang)]        
-    print(new_node)
+    #print(new_node)
     return new_node,cost,a_list,b_list
 
 
@@ -219,6 +227,16 @@ def obstaclecheck(x,y):
         if (200-dist) <= y <= (400+dist):
             return True
         
+    print(dist)
+    if y>=(ymax-dist) and y<=(ymax):
+        return True
+    
+    if x>=(xmax-dist) and x<=(xmax):
+        return True
+    
+    #if x>=0 and x<=dist:
+     #   return True
+
 #Nodes cost calculation
 def c2gCalc(start,goal):
     #euclidean distance of goal
@@ -228,7 +246,7 @@ def c2gCalc(start,goal):
 #Confirming expanded node has reached goal space
 def goalReachCheck(start,goal):
     print('checking goal')
-    goal_thresh= 50
+    goal_thresh= 100
     if ((start[0]-goal[0]) ** 2 + (start[1]-goal[1])**2) <= (goal_thresh**2):
         return True
     else:
@@ -245,8 +263,8 @@ def cost_update(child,par,cost,stepprev,stepaft):
     child_ang=int((round(child[2]/15)*15)//15)
     par_ang=int((round(par[1][2]/15)*15)//15)
     #print('cost calc')
-    x= round(child[0],2); y = round(child[1],2); z=int(child_ang)
-    a = round(par[1][0],2); b = round(par[1][1],2); c = int(par_ang)
+    x= child[0]; y = child[1]; z=int(child_ang)
+    a = par[1][0]; b = par[1][1]; c = int(par_ang)
     x1=int(round(x/2)*2)
     y1=int(round(y/2)*2)
     a1=int(round(a/2)*2)
@@ -254,10 +272,31 @@ def cost_update(child,par,cost,stepprev,stepaft):
 
     #child_list.append((x,y))
     #parent_list.append((a,b))
-    print('child par angle',x,y,a,b,child_ang,par_ang)
+    #print('child par angle',x,y,a,b,child_ang,par_ang)
+    i=0
+    while i<len(stepprev):
+        #print(stepprev[i],stepaft[i])
+        #print(stepprev[i],stepaft[i])
+        if str(stepprev[i]) in path_track1:
+            if (stepprev[i][0]==482.78 and stepprev[i][1]==177.17) or (stepaft[i]==482.78 and stepaft[i][1]==177.17):
+                print('step prev',stepprev[i],'step aft',stepaft[i])
+                print('key found 208 present1')
+                print(stepprev[i],stepaft[i])
+            path_track1[str(stepprev[i])].append(stepaft[i])
+        else:
+            if (stepprev[i][0]==482.78 and stepprev[i][1]==177.17) or (stepaft[i]==482.78 and stepaft[i][1]==177.17):
+                #print('key found 208')
+                print('step prev',stepprev[i],'step aft',stepaft[i])
+                print('key found 208 present')
+                print('step',stepprev,stepaft)
+                print(i)
+                print(stepprev[i],stepaft[i])
+            path_track1[str(stepprev[i])]=[]
+            path_track1[str(stepprev[i])].append(stepaft[i])
+        i+=1
     if ((obstaclecheck(x,y)!=True) and (x>0 and x<xmax) and (y>0 and y<ymax) and (child is not None)):
         if visited_nodes[2*x1][2*y1][z]==1:   
-            print('visited')
+            #print('visited')
             cost2come[2*x1][2*y1][z]= cost + cost2come[2*a1][2*b1][c]
             totCost1 = cost2come[2*x1][2*y1][z] + cost2goal[2*x1][2*y1][z]
             
@@ -266,17 +305,18 @@ def cost_update(child,par,cost,stepprev,stepaft):
                #child=[2*x1,2*y1,z]
                #stepprev = stepprev[::-1]
                #stepaft = stepaft[::-1]
-               i=0
-               while i<len(stepprev):
-                    print(stepprev[i])
-                    print(stepaft[i])
+               #i=0
+               #while i<len(stepprev):
+                    #print(stepprev[i])
+                    #print(stepaft[i])
+               '''
                     if str(stepprev[i]) in path_track1:
                         path_track1[str(stepprev[i])].append(stepaft[i])
                     else:
                         path_track1[str(stepprev[i])]=[]
                         path_track1[str(stepprev[i])].append(stepaft[i])
                     i+=1
-                    
+               '''
                if str([a,b]) in path_track:
                    path_track[str([a,b])].append([x,y])
                else:
@@ -287,17 +327,18 @@ def cost_update(child,par,cost,stepprev,stepaft):
             #print('not visited')
             #stepprev = stepprev[::-1]
             #stepaft = stepaft[::-1]
-            i=0
-            print(stepprev,stepaft)
+            #i=0
+            #print(stepprev,stepaft)
+            '''
             while i<len(stepprev):
-                print(stepprev[i],stepaft[i])
+                #print(stepprev[i],stepaft[i])
                 if str(stepprev[i]) in path_track1:
                     path_track1[str(stepprev[i])].append(stepaft[i])
                 else:
                     path_track1[str(stepprev[i])]=[]
                     path_track1[str(stepprev[i])].append(stepaft[i])
                 i+=1
-                    
+            '''       
             visited_nodes[2*x1][2*y1][z]=1
             cost2come[2*x1][2*y1][z]=cost+cost2come[2*a1][2*b1][c]     #Calculating the new cost
             cost2goal[2*x1][2*y1][z]=c2gCalc([x1,y1],[g[0],g[1]])
@@ -318,8 +359,8 @@ def cost_update(child,par,cost,stepprev,stepaft):
             #pygame.time.wait(5)
             #im_count+=1
 
-    else:
-        print('Obstacle')
+    #else:
+        #print('Obstacle')
         
 def main(rpm1,rpm2):
     l=0
@@ -403,18 +444,28 @@ def backtracking (start, goal):         #Backtracking to find the paths traverse
     path_track_list=[]
     path_track_list.append(val)
     try:
+        if str('[152, 1]') in path_track1.keys():
+            print('found')
+        else:
+            print('key no')
+        if '[208, 2]' in path_track1.values():
+            print('val found')
+        else:
+            print('not found')
+        #print(path_track1.keys())
         while val!=start:
             for key, values in path_track1.items():
                 #print('key',key,'values',values)
                 #if key[0]==16.93:
                 #    print('caught')
-                print('val',val)
+                #print('val',val)
                 while val in values:
                     key= ast.literal_eval(key)                  #converting strings of lists to pure lists
-                    print('val',val)
+                    #print('key',key)
+                    #print('val',val)
                     val = key
                     path_track_list.append(val)
-                #print(path_track_list)
+                    print(path_track_list)
             
     except KeyError:
         print('value not found')
@@ -457,11 +508,11 @@ if __name__ == "__main__":
             print('start node equal to/within threshold of goal node. Re enter your points again')
             continue
 
-        elif str(start) in riglist:                                  #Checking if start node is in the obstaclespace plus clearance
+        elif obstaclecheck(x1,y1)==True:                                  #Checking if start node is in the obstaclespace plus clearance
             print('Start node in obstacle space. Re enter the points again')
             continue
         
-        elif str(goal) in riglist:                                   #Checking if goal node is in the obstaclespace plus clearance
+        elif obstaclecheck(x2,y2)==True:                                  #Checking if goal node is in the obstaclespace plus clearance
             print('Goal node in obstacle space. Re enter the points again')
             continue
 
