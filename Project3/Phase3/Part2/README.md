@@ -19,4 +19,4 @@ Steps to launch the file in gazebo.
 3. The python script would present in the src folder in the ROS package. The name of the file is p3_astar_ros1.py.
 4. The file can be launched using the command roslaunch p3_Astar astar.launch
 
-The video simulations of the 6 test cases have been attached in the video simulations folder
+The video simulations of the 6 test cases have been attached in the simulation videos folder
