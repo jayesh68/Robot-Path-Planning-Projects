@@ -6,4 +6,4 @@ Steps to run the program:
 5. The pygame animation would begin once the inputs are entered by the user. 
 6. Once the goal node is reached the backtracked path would be drawn in pygame.
 7. The matplotlib visualizations would load once the backtracking is complete.
-8. .mp4 file has been uploaded in the same folder
+8. p3part1.mp4 file is the video file that has been uploaded in the same folder
