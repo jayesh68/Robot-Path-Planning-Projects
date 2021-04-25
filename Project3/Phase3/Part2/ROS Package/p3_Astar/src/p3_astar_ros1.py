@@ -144,7 +144,7 @@ def getobstaclespace():
                 oblist1.append([x,y])
  
             # left square
-            if 75 <= x <= 175:
+            if 25 <= x <= 175:
                 if 425 <= y <= 575:
                     oblist1.append((x, y))
 
@@ -166,7 +166,7 @@ def getobstaclespace():
 
 
             # left square
-            if (75-dist) <= x <= (175+dist):
+            if (25-dist) <= x <= (175+dist):
                 if (425-dist) <= y <= (575+dist):
                     riglist.add(str([x,y]))
 
