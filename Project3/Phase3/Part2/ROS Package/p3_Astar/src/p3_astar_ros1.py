@@ -1,14 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Fri Apr  9 19:49:58 2021
-
-@author: jayesh
-"""
-
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
 Created on Tue Aor 12 08:20:17 2021
 @author: jayesh
 @teammate: Yoseph Kebede
