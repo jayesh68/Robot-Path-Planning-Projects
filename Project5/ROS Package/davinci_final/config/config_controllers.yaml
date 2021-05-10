@@ -1,0 +1,82 @@
+# Robot name goes here
+davinci_final: # change the name
+  # default controller
+  joint_state_controller:
+    type: "joint_state_controller/JointStateController"
+    publish_rate: 100
+
+  # Controller 1
+  CamT1: 
+    type: position_controllers/JointPositionController
+    joint: CamJ1
+    pid : { p : 50, i : 0.0, d : 10}
+
+  # Controller 2
+  CamT2: 
+    type: position_controllers/JointPositionController
+    joint: CamJ2
+    pid : { p : 50, i : 0.0, d : 10}
+
+  # Controller 3
+  CamT3: 
+    type: position_controllers/JointPositionController
+    joint: CamJ3
+    pid : { p : 50, i : 0.0, d : 10}
+
+  # Controller 4
+  CamT4: 
+    type: position_controllers/JointPositionController
+    joint: CamJ4
+    pid : { p : 50, i : 0.0, d : 10}
+
+  # Controller 5
+  GripT1: 
+    type: position_controllers/JointPositionController
+    joint: GripJ1
+    pid : { p : 50, i : 0.0, d : 10}
+
+  # Controller 6
+  GripT2: 
+    type: position_controllers/JointPositionController
+    joint: GripJ2
+    pid : { p : 50, i : 0.0, d : 10}
+
+  # Controller 7
+  GripT3: 
+    type: position_controllers/JointPositionController
+    joint: GripJ3
+    pid : { p : 50, i : 0.0, d : 10}
+
+  # Controller 8
+  GripT4: 
+    type: position_controllers/JointPositionController
+    joint: GripJ4
+    pid : { p : 50, i : 0.0, d : 10}
+
+  # Controller 9
+  GripperT1: 
+    type: position_controllers/JointPositionController
+    joint: GripperJ1
+    pid : { p : 50, i : 0.0, d : 10}
+
+  arm_controller:
+    type : position_controllers/JointTrajectoryController
+    joints : 
+      - CamJ1
+      - CamJ2
+      - CamJ3
+      - CamJ4
+      - GripJ1
+      - GripJ2
+      - GripJ3
+      - GripJ4
+      - GripperJ1
+
+
+  # Controller 2
+  # Controller 3
+  # ....
+  # Controller n
+
+
+ 

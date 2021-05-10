@@ -1,0 +1,17 @@
+digraph G {
+"CamL4" -> "Lens"[label="Broadcaster: /robot_state_publisher\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 15510.199 sec old)\nBuffer length: 0.000 sec\n"];
+"CamL3" -> "CamL4"[label="Broadcaster: /robot_state_publisher\nAverage rate: 10.238 Hz\nMost recent transform: 15510.100 ( 0.099 sec old)\nBuffer length: 4.200 sec\n"];
+"GripL4" -> "Gripper2"[label="Broadcaster: /robot_state_publisher\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 15510.199 sec old)\nBuffer length: 0.000 sec\n"];
+"GripL3" -> "GripL4"[label="Broadcaster: /robot_state_publisher\nAverage rate: 10.238 Hz\nMost recent transform: 15510.100 ( 0.099 sec old)\nBuffer length: 4.200 sec\n"];
+"Base" -> "CamL1"[label="Broadcaster: /robot_state_publisher\nAverage rate: 10.238 Hz\nMost recent transform: 15510.100 ( 0.099 sec old)\nBuffer length: 4.200 sec\n"];
+"CamL1" -> "CamL2"[label="Broadcaster: /robot_state_publisher\nAverage rate: 10.238 Hz\nMost recent transform: 15510.100 ( 0.099 sec old)\nBuffer length: 4.200 sec\n"];
+"CamL2" -> "CamL3"[label="Broadcaster: /robot_state_publisher\nAverage rate: 10.238 Hz\nMost recent transform: 15510.100 ( 0.099 sec old)\nBuffer length: 4.200 sec\n"];
+"Base" -> "GripL1"[label="Broadcaster: /robot_state_publisher\nAverage rate: 10.238 Hz\nMost recent transform: 15510.100 ( 0.099 sec old)\nBuffer length: 4.200 sec\n"];
+"GripL1" -> "GripL2"[label="Broadcaster: /robot_state_publisher\nAverage rate: 10.238 Hz\nMost recent transform: 15510.100 ( 0.099 sec old)\nBuffer length: 4.200 sec\n"];
+"GripL2" -> "GripL3"[label="Broadcaster: /robot_state_publisher\nAverage rate: 10.238 Hz\nMost recent transform: 15510.100 ( 0.099 sec old)\nBuffer length: 4.200 sec\n"];
+"GripL4" -> "Gripper1"[label="Broadcaster: /robot_state_publisher\nAverage rate: 10.238 Hz\nMost recent transform: 15510.100 ( 0.099 sec old)\nBuffer length: 4.200 sec\n"];
+edge [style=invis];
+ subgraph cluster_legend { style=bold; color=black; label ="view_frames Result";
+"Recorded at time: 15510.199"[ shape=plaintext ] ;
+ }->"Base";
+}

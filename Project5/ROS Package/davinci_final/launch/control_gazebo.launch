@@ -1,0 +1,58 @@
+<launch>
+
+<!-- Opens gazebo -->
+<include file="$(find gazebo_ros)/launch/empty_world.launch">
+</include>
+
+<!-- URDF -> Param Server -->
+<param name= "robot_description" command="$(find xacro)/xacro --inorder $(find davinci_final)/urdf/my_robot_integration.urdf.xacro" />
+
+<!-- Spawner -->
+<node
+ name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" 
+ args="-urdf -param robot_description -model davinci_final -x 0 -y 0 -z 0"
+ respawn="false" output="screen" />
+
+
+
+ <!-- Load controller type -> Param Server -->
+ <rosparam 
+    file="$(find davinci_final)/config/config_controllers.yaml" 
+    command="load" >
+ </rosparam>
+
+ <!-- Spawn the controller type  -->
+<node 
+ name="controller_spawner" 
+ pkg="controller_manager"
+ ns="/davinci_final"
+ type="spawner"
+ args=" 
+    joint_state_controller
+    CamT1
+    CamT2
+    CamT3
+    CamT4
+    GripT1
+    GripT2
+    GripT3
+    GripT4
+    GripperT1
+ ">
+ </node>
+
+  <node
+    name="joint_state_publisher"
+    pkg="joint_state_publisher"
+    type="joint_state_publisher" />
+  <node
+    name="robot_state_publisher"
+    pkg="robot_state_publisher"
+    type="robot_state_publisher" />
+    
+</launch>
+
+
+
+
+

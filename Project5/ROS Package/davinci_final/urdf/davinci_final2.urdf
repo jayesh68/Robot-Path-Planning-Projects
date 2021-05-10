@@ -1,0 +1,699 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.6.0-1-g15f4949  Build Version: 1.6.7594.29634
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="davinci_final">
+  <link name="world"/>
+
+  <joint name="fixed" type="fixed">
+    <parent link="world"/>
+    <child link="Base"/>
+  </joint>
+  <link
+    name="Base">
+    <inertial>
+      <origin
+        xyz="0.655776415641992 0.371290277477391 -0.348427709891903"
+        rpy="0 0 0" />
+      <mass
+        value="752.821481116442" />
+      <inertia
+        ixx="73.802942907828"
+        ixy="-5.77266619862716"
+        ixz="0.0836249337623942"
+        iyy="40.1584646881209"
+        iyz="0.465633223789609"
+        izz="89.8646886076037" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://davinci_final/meshes/Base.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.898039215686275 0.917647058823529 0.929411764705882 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://davinci_final/meshes/Base.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="CamL1">
+    <inertial>
+      <origin
+        xyz="0.0474692001406715 -0.199385225285128 -0.00834217911424562"
+        rpy="0 0 0" />
+      <mass
+        value="20.0258937920878" />
+      <inertia
+        ixx="0.282688719136425e1"
+        ixy="0.00510627369677305e1"
+        ixz="0.000298023161907489e1"
+        iyy="0.121528957018449e1"
+        iyz="0.00686647691342479e1"
+        izz="0.359998883067959e1" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://davinci_final/meshes/CamL1.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.898039215686275 0.917647058823529 0.929411764705882 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://davinci_final/meshes/CamL1.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <!-- <joint
+    name="CamJ1"
+    type="revolute">
+    <origin
+      xyz="1.1675 -0.2702 1.0583"
+      rpy="1.8577 -0.12794 2.7468" />
+    <parent
+      link="Base" />
+    <child
+      link="CamL1" />
+    <axis
+      xyz="0 1 0" />
+    <limit
+      lower="-1.57"
+      upper="1.57"
+      effort="10"
+      velocity="10" />
+  </joint> -->
+  <joint
+    name="CamJ1"
+    type="continuous">
+    <origin
+      xyz="1.1675 -0.2702 1.0583"
+      rpy="1.8577 -0.12794 2.7468" />
+    <parent
+      link="Base" />
+    <child
+      link="CamL1" />
+    <axis
+      xyz="0 1 0" />
+  </joint>
+  <transmission name="CamT1">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="CamJ1">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="CamA1">
+      <mechanicalReduction>50</mechanicalReduction>
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </actuator>
+  </transmission>
+  <link
+    name="CamL2">
+    <inertial>
+      <origin
+        xyz="-0.190133273839928 -0.227540797098728 -0.0465637799889496"
+        rpy="0 0 0" />
+      <mass
+        value="24.6272896652191" />
+      <inertia
+        ixx="1.03614668918094e1"
+        ixy="0.158703022730723e1"
+        ixz="0.000"
+        iyy="0.141636861775166e1"
+        iyz="0.000"
+        izz="1.11526573521401e1" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://davinci_final/meshes/CamL2.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.898039215686275 0.917647058823529 0.929411764705882 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://davinci_final/meshes/CamL2.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="CamJ2"
+    type="revolute">
+    <origin
+      xyz="0 -0.15979 0"
+      rpy="1.5708 -1.0689 -1.5708" />
+    <parent
+      link="CamL1" />
+    <child
+      link="CamL2" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-0.77"
+      upper="0.77"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="CamL3">
+    <inertial>
+      <origin
+        xyz="0.0716225444215841 0.108810320559619 0.0465639013434742"
+        rpy="0 0 0" />
+      <mass
+        value="1.6680411969325" />
+      <inertia
+        ixx="0.0338409212016977e1"
+        ixy="0.00586957794347592e1"
+        ixz="0.000"
+        iyy="0.00378033681733235e1"
+        iyz="0.000"
+        izz="0.0372276236828401e1" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://davinci_final/meshes/CamL3.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.898039215686275 0.917647058823529 0.929411764705882 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://davinci_final/meshes/CamL3.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="CamJ3"
+    type="revolute">
+    <origin
+      xyz="-0.2185 -0.59707 0"
+      rpy="-3.1416 0 -2.5706" />
+    <parent
+      link="CamL2" />
+    <child
+      link="CamL3" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-0.77"
+      upper="-0.77"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="CamL4">
+    <inertial>
+      <origin
+        xyz="-4.44089209850063E-16 0.2612253832557 1.66533453693773E-15"
+        rpy="0 0 0" />
+      <mass
+        value="0.186348243480434" />
+      <inertia
+        ixx="0.0112553481535252e1"
+        ixy="0.000"
+        ixz="0.000"
+        iyy="0.0001e1"
+        iyz="0.000"
+        izz="0.0112553481535252e1" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://davinci_final/meshes/CamL4.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.898039215686275 0.917647058823529 0.929411764705882 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://davinci_final/meshes/CamL4.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="CamJ4"
+    type="prismatic">
+    <origin
+      xyz="0.13416 0 0.046564"
+      rpy="0 0.49778 0" />
+    <parent
+      link="CamL3" />
+    <child
+      link="CamL4" />
+    <axis
+      xyz="0 1 0" />
+    <limit
+      lower="0"
+      upper="0"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="Lens">
+    <inertial>
+      <origin
+        xyz="4.10782519111308E-15 -0.00310410505178815 -1.04360964314765E-14"
+        rpy="0 0 0" />
+      <mass
+        value="0.000193183311892924" />
+      <inertia
+        ixx="0.0001e1"
+        ixy="0.000"
+        ixz="0.000"
+        iyy="0.0001e1"
+        iyz="0.0001e1"
+        izz="0.0001e1" />
+    </inertial>
+ <<visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://davinci_final/meshes/Lens.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>-->
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://davinci_final/meshes/Lens.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="CamLens"
+    type="fixed">
+    <origin
+      xyz="0 -0.16254 0"
+      rpy="0 1.4538 0" />
+    <parent
+      link="CamL4" />
+    <child
+      link="Lens" />
+    <axis
+      xyz="0 1 0" />
+  </joint>
+  <link
+    name="GripL1">
+    <inertial>
+      <origin
+        xyz="0.048910201681391 -0.194431762818423 -0.00814202159208355"
+        rpy="0 0 0" />
+      <mass
+        value="20.51822099096" />
+      <inertia
+        ixx="0.295731484010267e1"
+        ixy="0.00173664509470263e1"
+        ixz="0.0001e1"
+        iyy="0.123814789210747e1"
+        iyz="0.00769399081512017e1"
+        izz="0.374505986537081e1" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://davinci_final/meshes/GripL1.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.898039215686275 0.917647058823529 0.929411764705882 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://davinci_final/meshes/GripL1.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="GripJ1"
+    type="continuous">
+    <origin
+      xyz="0.63571 -0.50691 1.3515"
+      rpy="2.0171 -0.11609 -2.9083" />
+    <parent
+      link="Base" />
+    <child
+      link="GripL1" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="GripL2">
+    <inertial>
+      <origin
+        xyz="-0.16090054793039 -0.148754937052251 -0.0465640119677332"
+        rpy="0 0 0" />
+      <mass
+        value="17.6001911378671" />
+      <inertia
+        ixx="0.406795948112077e1"
+        ixy="0.087214765381765e1"
+        ixz="0.000"
+        iyy="0.0994938591810753e1"
+        iyz="0.000"
+        izz="0.461655818314422e1" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://davinci_final/meshes/GripL2.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.898039215686275 0.917647058823529 0.929411764705882 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://davinci_final/meshes/GripL2.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="GripJ2"
+    type="revolute">
+    <origin
+      xyz="0 -0.12945 0"
+      rpy="-1.5708 -1.3625 1.5708" />
+    <parent
+      link="GripL1" />
+    <child
+      link="GripL2" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-0.77"
+      upper="0.77"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="GripL3">
+    <inertial>
+      <origin
+        xyz="0.0716227364547322 0.108810491075718 0.0465638161492091"
+        rpy="0 0 0" />
+      <mass
+        value="1.66804162014251" />
+      <inertia
+        ixx="0.0338410007756111e1"
+        ixy="0.0058696014951319e1"
+        ixz="0.000"
+        iyy="0.00378035322035429e1"
+        iyz="0.000"
+        izz="0.037227721413998e1" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://davinci_final/meshes/GripL3.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.898039215686275 0.917647058823529 0.929411764705882 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://davinci_final/meshes/GripL3.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="GripJ3"
+    type="revolute">
+    <origin
+      xyz="-0.1943 -0.42281 0"
+      rpy="3.1416 0 3.0389" />
+    <parent
+      link="GripL2" />
+    <child
+      link="GripL3" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-0.77"
+      upper="0.77"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="GripL4">
+    <inertial>
+      <origin
+        xyz="-9.28429899627048E-08 0.0874927043684337 0.000173317510804516"
+        rpy="0 0 0" />
+      <mass
+        value="0.197864622086744" />
+      <inertia
+        ixx="0.0129770770685318e1"
+        ixy="0.000"
+        ixz="0.000"
+        iyy="0.0001e1"
+        iyz="0.000"
+        izz="0.012978538778816e1" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://davinci_final/meshes/GripL4.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.898039215686275 0.917647058823529 0.929411764705882 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://davinci_final/meshes/GripL4.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="GripJ4"
+    type="prismatic">
+    <origin
+      xyz="0.13416 0 0.046564"
+      rpy="-3.1416 0.72256 -3.1416" />
+    <parent
+      link="GripL3" />
+    <child
+      link="GripL4" />
+    <axis
+      xyz="0 1 0" />
+    <limit
+      lower="0"
+      upper="0"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="Gripper1">
+    <inertial>
+      <origin
+        xyz="0 -0.0169435917441886 0.00900000000000012"
+        rpy="0 0 0" />
+      <mass
+        value="0.00228574536802514" />
+      <inertia
+        ixx="0.0001e1"
+        ixy="0.000"
+        ixz="0.000"
+        iyy="0.0001e1"
+        iyz="0.000"
+        izz="0.0001e1" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://davinci_final/meshes/Gripper1.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.898039215686275 0.917647058823529 0.929411764705882 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://davinci_final/meshes/Gripper1.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="GripperJ1"
+    type="revolute">
+    <origin
+      xyz="0.015 -0.31338 0"
+      rpy="0 0 -0.17792" />
+    <parent
+      link="GripL4" />
+    <child
+      link="Gripper1" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-0.45"
+      upper="0"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="Gripper2">
+    <inertial>
+      <origin
+        xyz="1.55431223447522E-15 -0.0169435917441881 0.0150183163907054"
+        rpy="0 0 0" />
+      <mass
+        value="0.00228574536802514" />
+      <inertia
+        ixx="0.0001e1"
+        ixy="0.000"
+        ixz="0.000"
+        iyy="0.0001e1"
+        iyz="0.000"
+        izz="0.0001e1" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://davinci_final/meshes/Gripper2.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.898039215686275 0.917647058823529 0.929411764705882 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://davinci_final/meshes/Gripper2.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="GripperJ2"
+    type="fixed">
+    <origin
+      xyz="-0.015 -0.31338 -0.0060183"
+      rpy="0 0 0.35499" />
+    <parent
+      link="GripL4" />
+    <child
+      link="Gripper2" />
+    <axis
+      xyz="0 0 1" />
+  </joint>
+</robot>
