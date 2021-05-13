@@ -43,7 +43,6 @@ from gazebo_msgs.srv import GetModelState, GetModelStateRequest, GetLinkState, G
 from sensor_msgs.msg import Imu
 from mpl_toolkits import mplot3d
 
-%matplotlib inline
 
 
 import matplotlib.pyplot as plt
@@ -53,11 +52,32 @@ joint_lims = {"CamJ1": (None, None),
                       "CamJ2": (-0.3232, 0.5),
                       "CamJ3": (-1.4, .64),
                       "CamJ4": (-.337, .1623)}
+
+
+# joint_offset = {"CamJ1": 0,          
+#                 "CamJ2": 0.48,                  # Currect dir
+#                 "CamJ3": -.95,                  # Opposite dir
+#                 "CamJ4": .16}
+
 g_joint_states = None
 g_positions = None
 g_pos1 = None
 g_velocities = None
 verbose = False
+
+m = lambda inch: 0.0254*inch
+
+l1 = m(6.3)
+l2 = m(1.83)
+l3 = m(8.6)
+l4 = m(23.5)
+l5 = m(5.28)
+l6 = 0
+
+offset1 = 0
+offset2 = 0.48
+offset3 = -0.95
+offset4 = 0.16
 
 q1, q2, q3, q4, q5, q6 = symbols('q1:7')                                 # joint angles theta
 d1, d2, d3, d4, d5, d6 = symbols('d1:7')                                 # link offsets
@@ -70,7 +90,7 @@ dh = {alpha0:                     1.57, a0:           0,  d1:    -l1, q1:       
       alpha2:                       1.57, a2:          l4,  d3:      0, q3:            q2+offset2,
       alpha3:                     1.57, a3:           0,  d4:     l3, q4:                 0,
       alpha4:                    -1.57, a4:          l5,  d5:      0, q5:            q3+offset3,
-      alpha5:                        0, a5:           0,  d6:      d,q6:                 0
+      alpha5:                        0, a5:           0,  d6:      q4+offset4,q6:                 0
       } 
 
 class Execute:
@@ -84,11 +104,11 @@ class Execute:
             self.cost = 0.0
 
     def __init__(self, start, goal, rand_area,
-                 dista=0.62,
+                 dista=0.21,
                  path_resolution=.01,
-                 goal_sample_rate=40,
-                 max_iter=1000,
-                 connect_circle_dist=20.0):
+                 goal_sample_rate=200,
+                 max_iter=5000,
+                 connect_circle_dist=0.5):
         
         self.goal_path = self.Node(goal)
         self.node_list = []
@@ -317,17 +337,17 @@ class Execute:
             # print(rnd_q.x[0],rnd_q.x[1],rnd_q.x[2],rnd_q.x[3])
             EE_pos = self.EE_pos(rnd_q.x[0],rnd_q.x[1],rnd_q.x[2],rnd_q.x[3])
             # print(EE_pos[0])
-            while self.calculate_thetas((EE_pos[0],EE_pos[1],EE_pos[2]),'Cam') == False:
-                rnd_q = self.get_random_node()
-                EE_pos = self.EE_pos(rnd_q[0],rnd_q[1],rnd_q[2],rnd_q[3])
+            # while self.calculate_thetas((EE_pos[0],EE_pos[1],EE_pos[2]),'Cam') == False:
+            #     rnd_q = self.get_random_node()
+            #     EE_pos = self.EE_pos(rnd_q[0],rnd_q[1],rnd_q[2],rnd_q[3])
             
 
             nearest = self.nearest_fun(self.node_list, rnd_q)
             new_node = self.steer(self.node_list[nearest],rnd_q,self.dista)
             Col_pos = self.EE_pos(new_node.x[0],new_node.x[1],new_node.x[2],new_node.x[3])
-            if self.collision_fun(Col_pos):
-                nearest = self.near_fun(new_node)
-                new_node = self.parent_fun(new_node, nearest)
+            # if self.collision_fun(Col_pos):
+            nearest = self.near_fun(new_node)
+            new_node = self.parent_fun(new_node, nearest)
 
             if new_node:
                 self.node_list.append(new_node)
@@ -346,15 +366,18 @@ class Execute:
 
     def parent_fun(self, new_node, nearest):
         costs = []
-        
         for i in nearest:
             near_node = self.node_list[i]
             t_node = self.steer(near_node, new_node)
             t_node_pos = self.EE_pos(t_node.x[0],t_node.x[1],t_node.x[2],t_node.x[3])
-            if t_node and self.collision_fun(t_node_pos)
+            if t_node and self.collision_fun(t_node_pos):
                 costs.append(self.calc_new_cost(near_node, new_node))
+                print(self.calc_new_cost(near_node, new_node))
+
             else:
-                costs.append(float("inf"))  # the cost of collision node
+                # costs.append(float("inf"))  # the cost of collision node
+                costs.append(10000)
+        print('costs',costs)
         min_cost = min(costs)
 
         if min_cost == float("inf") or not nearest:
@@ -396,7 +419,7 @@ class Execute:
     def near_fun(self, new_node):
         nnode = len(self.node_list) + 1
         r = self.connect_circle_dist * math.sqrt((math.log(nnode) / nnode))
-  
+
         if hasattr(self, 'dista'):
             r = min(r, self.dista)
         dist_list = [np.sum((np.array(node.x) - np.array(new_node.x)) ** 2)
@@ -442,12 +465,15 @@ class Execute:
         return path
 
     def get_random_node(self):
-            
-        rnd_q = self.Node(np.random.uniform(self.min_rand, self.max_rand, self.dimension))
+        if random.randint(0, 100) > self.goal_sample_rate:
+
+            rnd_q = self.Node(np.random.uniform(self.min_rand, self.max_rand, self.dimension))
             # print(rnd_q.x)
-        else:  
-            rnd_q = self.Node(self.end.x)
-        return rnd_q
+        # else:  
+        #     rnd_q = self.Node(self.end.x)
+        else:  # goal point sampling
+            rnd = self.Node(self.end.x)
+        return rnd
 
     def steer(self, from_node, to_node, cost_len=float("inf")):
         new_node = self.Node(list(from_node.x))
@@ -461,7 +487,12 @@ class Execute:
 
         start, end = np.array(from_node.x), np.array(to_node.x)
         v = end - start
+
         u = v / (np.sqrt(np.sum(v ** 2)))
+
+        print("v",v)
+        print("u",u)
+        
         for blah in range(n_expand):
             new_node.x += u * self.path_resolution
             new_node.path_x.append(list(new_node.x))
@@ -514,31 +545,32 @@ class Execute:
 
     def EE_pos(self,q_1,q_2,q_3,q_4):
 
-            m = lambda inch: 0.0254*inch
+        m = lambda inch: 0.0254*inch
 
-            l1 = m(6.3)
-            l2 = m(1.83)
-            l3 = m(8.6)
-            l4 = m(23.5)
-            l5 = m(5.28)
+        l1 = m(6.3)
+        l2 = m(1.83)
+        l3 = m(8.6)
+        l4 = m(23.5)
+        l5 = m(5.28)
 
-            offset1=0.48
-            offset2=-0.95
-            offset3=0.16
-            T0_1 = self.TF_Mat(1.57, 0, -l1, q_1+offset1)
-            T1_2 = self.TF_Mat(3.14, 0, l2, -1.57)
-            T2_3 = self.TF_Mat(1.57, l4, 0, q_2+offset2)
-            T3_4 = self.TF_Mat(1.57, 0, l3, 0)
-            T4_5 = self.TF_Mat(-1.57, l5, d4, q_3+offset3)
-            T5_6 = self.TF_Mat(0, 0, q_4, 0)
-            
-            T0_6 = (T0_1 * T1_2 * T2_3 * T3_4 * T4_5 * T5_6 )
-            
-            #end effector position
-            EE_pos=T0_6[-1]
-            EE_pos=EE_pos[0:2,:]                
+        offset1=0.48
+        offset2=-0.95
+        offset3=0.16
+        T0_1 = self.TF_Mat(1.57, 0, -l1, q_1+offset1)
+        T1_2 = self.TF_Mat(3.14, 0, l2, -1.57)
+        T2_3 = self.TF_Mat(1.57, l4, 0, q_2+offset2)
+        T3_4 = self.TF_Mat(1.57, 0, l3, 0)
+        T4_5 = self.TF_Mat(-1.57, l5, 0, q_3+offset3)
+        T5_6 = self.TF_Mat(0, 0, q_4+offset3, 0)
+        
+        T0_6 = (T0_1 * T1_2 * T2_3 * T3_4 * T4_5 * T5_6 )
+        
+        #end effector position
 
-            return EE_pos
+
+        EE_pos = [T0_6[3],T0_6[7],T0_6[11]]
+
+        return EE_pos
 
             
     def talker(self,q_disc):
@@ -560,26 +592,26 @@ class Execute:
         pub8 = rospy.Publisher('/davinci_final/GripperT1/command', Float64, queue_size=10)
     
 
-        rospy.init_node('talker', anonymous=True)
+        # rospy.init_node('talker', anonymous=True)
         rate = rospy.Rate(10) # 10hz
         while not rospy.is_shutdown():
-            print(q_disc)
-            pub.publish(q_disc[0])
-            print(q_disc[0])
+ 
             pub.publish(0.617)
             pub1.publish(-0.35)
             pub2.publish(-0.022521)
             pub3.publish(-0.15)
-            now = rospy.get_time()
-            
+            print("Got here")
             for i in range(len(q_disc)):
-                pub.publish(q_disc[0])
-                pub1.publish(q_disc[1])
-                pub2.publish(q_disc[2])
-                pub3.publish(q_disc[3])
+                pub4.publish(q_disc[i][0])
+                pub5.publish(q_disc[i][1])
+                pub6.publish(q_disc[i][2])
+                pub7.publish(q_disc[i][3])
+                time.sleep(2.3)
+                if i == len(q_disc):
+                    quit()
 
-            if now > 5: 
-                break
+            # if now > 5: 
+            #     break
             #     pub1.publish(msg_data2)
             #     # pub2.publish(msg_data2)
             #     # pub3.publish(msg_data2)
@@ -603,14 +635,13 @@ class Execute:
         d = np.sqrt(np.sum((np.array(to_node.x) - np.array(from_node.x))**2))
         return d
 
-   @staticmethod
+    @staticmethod
     def collision_fun(node):
 
         if node is None:
             return False
         
         dist = sqrt((1.043117-node[0])**2+(-1.21341-node[1])**2+(0.885659-node[2])**2)
-
         if dist <= 0.15:
             return False  # collision
 
@@ -621,18 +652,21 @@ def executer():
 
     start = [0,0,0,0]
     # print(start)
-    end = [0.92, -0.7, -0.42, -0.25]
+    end = [0.42, 0.12, 0.29, 0.35]
     # print(end)
 
     rrt_star = Execute(start=start,
                        goal=end,
-                       rand_area=[0, .1],
-                       max_iter=1000)
-                    #    robot=seven_joint_arm,
-                    #    obstacle_list=obstacle_list)
-    path = rrt_star.RRT(search_until_max_iter=False)
-    print(path)
+                       rand_area=[0, 0.01],
+                       max_iter=8000)
 
+    path = rrt_star.RRT(search_until_max_iter=False)
+
+    print('path is',path)
+    # path = path[1:len(path)-1]
+    path = path[::-1]
+    print(path)
+    rrt_star.talker(path)
 
 
 if __name__ == '__main__':
@@ -643,6 +677,7 @@ if __name__ == '__main__':
 
     rospy.spin()
 
+
 # #1 - Fwd kinematics Test
 
 # #2 - IK Test: 
@@ -650,5 +685,4 @@ if __name__ == '__main__':
 
 # Joint parameters: 0.22867646378864692 0.5925882455669071 0.4517919187720105 -0.31473629905774875
 # Expected Gripper Position: [ 0.7438616 -0.1753504  0.0986272]
-
 
